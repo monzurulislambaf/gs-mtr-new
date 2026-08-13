@@ -1,0 +1,40 @@
+# Keep EAS upload free of local machine paths and heavy artifacts
+
+node_modules/
+.expo/
+dist/
+web-build/
+
+# Android machine-specific / generated (breaks Linux EAS builds if uploaded)
+android/
+android/build/
+android/app/build/
+android/local.properties
+android/.gradle/
+android/app/.cxx/
+android/app/debug.keystore
+
+# iOS
+ios/build/
+ios/Pods/
+
+# Env / secrets that should come from EAS secrets or eas.json env
+.env
+.env*.local
+eas.env
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.log
+
+# Docs / agent notes (not needed for build)
+.claude/
+AGENTS.md
+CLAUDE.md
+
+# Local debug log dumps
+build-log.txt
+build-log-decoded.txt
+build-meta.json

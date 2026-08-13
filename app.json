@@ -1,0 +1,71 @@
+{
+  "expo": {
+    "name": "GS MTR",
+    "slug": "monzurul",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/AppIcon.icon/Assets/icon.png",
+    "scheme": "gsmtr",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "./assets/AppIcon.icon",
+      "bundleIdentifier": "com.gs.mtr",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera for QR code sharing",
+        "NSPhotoLibraryUsageDescription": "This app needs photo library access for contact photos",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/adaptive-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "package": "com.gs.mtr",
+      "permissions": [
+        "android.permission.CALL_PHONE",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/AppIcon.icon/Assets/icon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-sharing",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/AppIcon.icon/Assets/icon.png",
+          "imageWidth": 100
+        }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "fdb01d4a-bb08-4f9a-ae03-807244a5b74d"
+      }
+    },
+    "owner": "monzuruls-team"
+  }
+}

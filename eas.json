@@ -1,0 +1,45 @@
+{
+  "cli": {
+    "version": ">=21.3.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyA2Y-tpSnRclN7agYywy0cpOirH5iVrmO4",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "pabx-mtr.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "pabx-mtr",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "pabx-mtr.firebasestorage.app",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "559276448600",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:559276448600:web:ce299af3c1cbb518a6632d"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyA2Y-tpSnRclN7agYywy0cpOirH5iVrmO4",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "pabx-mtr.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "pabx-mtr",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "pabx-mtr.firebasestorage.app",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "559276448600",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:559276448600:web:ce299af3c1cbb518a6632d"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyA2Y-tpSnRclN7agYywy0cpOirH5iVrmO4",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "pabx-mtr.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "pabx-mtr",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "pabx-mtr.firebasestorage.app",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "559276448600",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:559276448600:web:ce299af3c1cbb518a6632d"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

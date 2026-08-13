@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "contacts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "NAME", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "contacts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "BD NO", "order": "ASCENDING" },
+        { "fieldPath": "deleted", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

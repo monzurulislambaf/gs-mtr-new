@@ -1,0 +1,80 @@
+<<<<<<< HEAD
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native builds (generated; regenerate with prebuild / EAS)
+=======
+node_modules/
+.expo/
+dist/
+npm-debug.*
+>>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+<<<<<<< HEAD
+
+# Android local machine / build artifacts
+android/build/
+android/app/build/
+android/local.properties
+android/.gradle/
+android/app/.cxx/
+
+# iOS
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+
+# macOS
+.DS_Store
+
+# local env files
+.env
+.env*.local
+eas.env
+
+# typescript
+*.tsbuildinfo
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# testing
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary / local logs
+*.log
+build-log.txt
+build-log-decoded.txt
+build-meta.json
+deflate-out.txt
+=======
+web-build/
+.env
+.env.local
+.env.production
+*.tsbuildinfo
+>>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0
