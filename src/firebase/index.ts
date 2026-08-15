@@ -1,5 +1,25 @@
 export { initializeFirebase, getFirebaseApp, getFirebaseAuth, getFirebaseDb, getFirebaseStorage } from './config';
-export { signIn, signUp, signOut, onAuthChange, resetPassword } from './auth';
+export {
+  signInWithBDNumber,
+  requestRegistration,
+  signOut,
+  onAuthChange,
+  resetPassword,
+  getUserProfile,
+  toAppUser,
+  profileFromFirestore,
+} from './auth';
+export {
+  listenUserProfile,
+  getPendingRegistrations,
+  listenPendingRegistrations,
+  getAllUsers,
+  getUserProfileById,
+  approveRegistration,
+  declineRegistration,
+  setUserStatus,
+  setUserRole,
+} from './userService';
 export {
   fetchAllContacts,
   syncChangedContacts,

@@ -9,11 +9,11 @@
       ]
     },
     {
-      "collectionGroup": "contacts",
+      "collectionGroup": "users",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "BD NO", "order": "ASCENDING" },
-        { "fieldPath": "deleted", "order": "ASCENDING" }
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
       ]
     }
   ],

@@ -26,6 +26,9 @@ function createNativePersistence(storage: any): any {
   };
 }
 
+/** AsyncStorage-backed persistence. Exposed so Remember Me can toggle it. */
+export const nativePersistence = createNativePersistence(AsyncStorage);
+
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -52,21 +55,25 @@ export function initializeFirebase(): void {
 }
 
 export function getFirebaseApp(): FirebaseApp {
+  initializeFirebase();
   if (!app) throw new Error('Firebase not initialized');
   return app;
 }
 
 export function getFirebaseAuth(): Auth {
+  initializeFirebase();
   if (!auth) throw new Error('Firebase Auth not initialized');
   return auth;
 }
 
 export function getFirebaseDb(): Firestore {
+  initializeFirebase();
   if (!db) throw new Error('Firestore not initialized');
   return db;
 }
 
 export function getFirebaseStorage(): FirebaseStorage {
+  initializeFirebase();
   if (!storage) throw new Error('Storage not initialized');
   return storage;
 }

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { performIncrementalSync, checkConnectivity, onConnectivityChange } from '@/database/sync';
+import { useAuthStore } from '@/store/authStore';
 
 interface SyncStore {
   lastSyncTime: number | null;
@@ -48,6 +49,9 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
   manualSync: async () => {
     const { isSyncing, isOnline } = get();
     if (isSyncing || !isOnline) return;
+
+    // Only approved users (and admins) may sync contacts.
+    if (!useAuthStore.getState().canAccessContacts) return;
 
     set({ isSyncing: true, syncError: null });
     console.log('[SYNC] Firebase sync started');

@@ -18,6 +18,8 @@ export function useContacts() {
 
   useEffect(() => {
     if (!isOnline) return;
+    // Only approved users (and admins) receive realtime contact updates.
+    if (!useAuthStore.getState().canAccessContacts) return;
 
     const setupListener = async () => {
       try {

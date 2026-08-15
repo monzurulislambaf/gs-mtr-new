@@ -1,5 +1,14 @@
 import { MD3LightTheme, MD3DarkTheme, configureFonts } from 'react-native-paper';
 import type { MD3Theme } from 'react-native-paper';
+import { useFonts } from 'expo-font';
+import { useColorScheme } from 'react-native';
+import {
+  Oswald_400Regular,
+  Oswald_500Medium,
+  Oswald_600SemiBold,
+  Oswald_700Bold,
+} from '@expo-google-fonts/oswald';
+import { useSettingsStore } from '@/store/settingsStore';
 
 const fontConfig = {
   default: {
@@ -112,6 +121,152 @@ const fontConfig = {
     letterSpacing: 0.4,
   },
 };
+
+export const appFontAssets = {
+  Oswald_400Regular,
+  Oswald_500Medium,
+  Oswald_600SemiBold,
+  Oswald_700Bold,
+};
+
+/** Loads the bundled Oswald display font. Never blocks rendering. */
+export function useAppFonts(): { loaded: boolean } {
+  const [loaded, error] = useFonts(appFontAssets);
+  return { loaded: loaded && !error };
+}
+
+/** Resolves the light/dark/system theme setting to a concrete mode. */
+export function useIsDark(): boolean {
+  const themeSetting = useSettingsStore((s) => s.theme);
+  const systemScheme = useColorScheme();
+  if (themeSetting === 'system') return systemScheme === 'dark';
+  return themeSetting === 'dark';
+}
+
+/**
+ * Oswald config for the auth screens' military-styled headings. Body and
+ * input roles stay on the System font for readability.
+ */
+const oswaldConfig = {
+  default: {
+    fontFamily: 'System',
+    fontWeight: '400' as const,
+  },
+  displayLarge: {
+    fontFamily: 'Oswald_700Bold',
+    fontWeight: '700' as const,
+    fontSize: 57,
+    lineHeight: 64,
+    letterSpacing: -0.25,
+  },
+  displayMedium: {
+    fontFamily: 'Oswald_700Bold',
+    fontWeight: '700' as const,
+    fontSize: 45,
+    lineHeight: 52,
+    letterSpacing: 0,
+  },
+  displaySmall: {
+    fontFamily: 'Oswald_700Bold',
+    fontWeight: '700' as const,
+    fontSize: 36,
+    lineHeight: 44,
+    letterSpacing: 0,
+  },
+  headlineLarge: {
+    fontFamily: 'Oswald_600SemiBold',
+    fontWeight: '600' as const,
+    fontSize: 32,
+    lineHeight: 40,
+    letterSpacing: 0,
+  },
+  headlineMedium: {
+    fontFamily: 'Oswald_600SemiBold',
+    fontWeight: '600' as const,
+    fontSize: 28,
+    lineHeight: 36,
+    letterSpacing: 0,
+  },
+  headlineSmall: {
+    fontFamily: 'Oswald_600SemiBold',
+    fontWeight: '600' as const,
+    fontSize: 24,
+    lineHeight: 32,
+    letterSpacing: 0,
+  },
+  titleLarge: {
+    fontFamily: 'Oswald_600SemiBold',
+    fontWeight: '600' as const,
+    fontSize: 22,
+    lineHeight: 28,
+    letterSpacing: 0.3,
+  },
+  titleMedium: {
+    fontFamily: 'Oswald_500Medium',
+    fontWeight: '500' as const,
+    fontSize: 16,
+    lineHeight: 24,
+    letterSpacing: 0.5,
+  },
+  titleSmall: {
+    fontFamily: 'Oswald_500Medium',
+    fontWeight: '500' as const,
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 0.5,
+  },
+  labelLarge: {
+    fontFamily: 'Oswald_600SemiBold',
+    fontWeight: '600' as const,
+    fontSize: 15,
+    lineHeight: 20,
+    letterSpacing: 0.8,
+  },
+  labelMedium: {
+    fontFamily: 'Oswald_500Medium',
+    fontWeight: '500' as const,
+    fontSize: 12,
+    lineHeight: 16,
+    letterSpacing: 0.6,
+  },
+  labelSmall: {
+    fontFamily: 'Oswald_500Medium',
+    fontWeight: '500' as const,
+    fontSize: 11,
+    lineHeight: 16,
+    letterSpacing: 0.6,
+  },
+  bodyLarge: {
+    fontFamily: 'System',
+    fontWeight: '400' as const,
+    fontSize: 16,
+    lineHeight: 24,
+    letterSpacing: 0.5,
+  },
+  bodyMedium: {
+    fontFamily: 'System',
+    fontWeight: '400' as const,
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 0.25,
+  },
+  bodySmall: {
+    fontFamily: 'System',
+    fontWeight: '400' as const,
+    fontSize: 12,
+    lineHeight: 16,
+    letterSpacing: 0.4,
+  },
+};
+
+/** Builds the app theme, swapping display type to Oswald once fonts load. */
+export function createAppTheme(isDark: boolean, useOswald: boolean): MD3Theme {
+  const base = isDark ? DarkTheme : LightTheme;
+  return {
+    ...base,
+    fonts: configureFonts({ config: useOswald ? oswaldConfig : fontConfig }),
+  };
+}
 
 export const LightTheme: MD3Theme = {
   ...MD3LightTheme,

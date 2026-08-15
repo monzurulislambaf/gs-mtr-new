@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import { Text, Button, useTheme } from 'react-native-paper';
+import { Text, Button, Icon, useTheme } from 'react-native-paper';
 
 interface EmptyStateProps {
   icon?: string;
@@ -10,6 +10,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
+  icon,
   title,
   subtitle,
   actionLabel,
@@ -19,6 +20,16 @@ export function EmptyState({
 
   return (
     <View style={styles.container}>
+      {icon ? (
+        <View
+          style={[
+            styles.iconCircle,
+            { backgroundColor: theme.colors.primaryContainer },
+          ]}
+        >
+          <Icon source={icon} size={34} color={theme.colors.onPrimaryContainer} />
+        </View>
+      ) : null}
       <Text variant="headlineSmall" style={[styles.title, { color: theme.colors.onSurface }]}>
         {title}
       </Text>
@@ -46,6 +57,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 32,
     paddingVertical: 64,
+  },
+  iconCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
   },
   title: {
     textAlign: 'center',

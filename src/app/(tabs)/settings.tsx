@@ -5,6 +5,7 @@ import {
   Button,
   List,
   Divider,
+  Badge,
   useTheme,
   Dialog,
   Portal,
@@ -16,6 +17,7 @@ import { router } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useContactsStore } from '@/store/contactsStore';
+import { usePendingRegistrations } from '@/hooks/usePendingRegistrations';
 import { getAllContactsCount } from '@/database/database';
 import { exportContactsToCsv, bulkImportFromCsv } from '@/services/csvService';
 import { bulkImportContacts } from '@/firebase/firestore';
@@ -36,6 +38,7 @@ export default function SettingsScreen() {
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [snackbar, setSnackbar] = useState({ visible: false, message: '' });
+  const { count: pendingCount } = usePendingRegistrations(isAdmin);
 
   useEffect(() => {
     getAllContactsCount().then(setContactCount);
@@ -135,6 +138,39 @@ export default function SettingsScreen() {
             left={(props) => <List.Icon {...props} icon="contacts" />}
           />
         </List.Section>
+
+        {isAdmin && (
+          <>
+            <Divider />
+
+            <List.Section>
+              <List.Subheader style={{ color: theme.colors.primary }}>
+                Administration
+              </List.Subheader>
+              <List.Item
+                title="Pending Approvals"
+                description="Review new registration requests"
+                left={(props) => <List.Icon {...props} icon="account-clock" />}
+                right={(props) =>
+                  pendingCount > 0 ? (
+                    <View style={styles.badgeWrap}>
+                      <Badge visible={pendingCount > 0} size={22}>
+                        {pendingCount}
+                      </Badge>
+                    </View>
+                  ) : null
+                }
+                onPress={() => router.push('/admin/pending-approvals' as any)}
+              />
+              <List.Item
+                title="User Management"
+                description="View and manage all users"
+                left={(props) => <List.Icon {...props} icon="account-group" />}
+                onPress={() => router.push('/admin/users' as any)}
+              />
+            </List.Section>
+          </>
+        )}
 
         {isAdmin && (
           <>
@@ -259,6 +295,10 @@ const styles = StyleSheet.create({
   },
   scroll: {
     paddingBottom: 80,
+  },
+  badgeWrap: {
+    justifyContent: 'center',
+    paddingRight: 8,
   },
   logoutSection: {
     padding: 24,

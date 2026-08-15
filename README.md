@@ -107,11 +107,29 @@ firebase deploy --only firestore:indexes,firestore:rules
 ### Initial Admin Account
 
 Create an admin user in Firebase Console:
-1. Go to **Authentication** → Add user
-2. Sign in with that user in the app
-3. In Firestore, create a document at `users/{uid}` with `role: "admin"`
+1. Go to **Authentication** → Add user (email/password)
+2. In Firestore, create a document at `users/{uid}` with `role: "admin"` and `status: "approved"`
 
-Or seed via Firebase Console directly.
+For a super admin, use `role: "super_admin"` instead. Admins are provisioned through the
+Firebase console only — regular users can never change their own role or approval status.
+
+### Registration & Admin Approval
+
+- New users sign in with their **BD Number + password** (the app securely maps the BD number
+to their Firebase Auth identity via the `userLookup` collection — passwords never touch Firestore).
+- Users request registration through the **Request Registration** screen, which creates the
+Firebase Auth account and a `users/{uid}` profile with `status: "pending"`.
+- Pending users cannot access contacts until an admin approves them.
+- Admins see **Settings → Pending Approvals** (with a live count badge) and can approve or
+decline registrations with an optional reason.
+- **User Management** lets admins view all users, suspend/reactivate accounts, and (for
+super admins) manage admin roles.
+- Approved users keep offline access through a locally cached session.
+
+Deploy the rules and indexes after any change:
+```bash
+firebase deploy --only firestore:indexes,firestore:rules
+```
 
 ### Running the App
 
@@ -227,9 +245,11 @@ Firestore `onSnapshot` listeners watch for changes after `lastSyncTime`. When a 
 ## Firebase Security Rules
 
 See `firebase.rules` for the complete ruleset. Key rules:
-- All authenticated users can read contacts
-- Only users with `role: "admin"` can create/update/delete contacts
-- Users can read their own user document
+- Only users with `status: "approved"` (or admins) can read contacts
+- Only users with `role: "admin"` / `"super_admin"` can create/update/delete contacts
+- Users can read their own user document; users can never change `role`, `status`,
+  `approvedAt`, `approvedBy`, `declinedAt`, `declinedBy`, or `declineReason` themselves
+- Only admins can approve/decline registrations and manage user status/roles
 
 ## Firestore Indexes
 

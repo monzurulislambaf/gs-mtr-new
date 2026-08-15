@@ -1,23 +1,71 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc(uid) {
+      return get(/databases/$(database)/documents/users/$(uid));
+    }
+
+    function hasUserDoc(uid) {
+      return exists(/databases/$(database)/documents/users/$(uid));
+    }
+
     function isAdmin() {
-      return request.auth != null &&
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      return isSignedIn() && hasUserDoc(request.auth.uid) &&
+        userDoc(request.auth.uid).data.role in ['admin', 'super_admin'];
+    }
+
+    // Contacts are only readable by users whose registration is approved.
+    // Pending, declined and suspended users are denied at the backend level.
+    function isApproved() {
+      return isSignedIn() && hasUserDoc(request.auth.uid) &&
+        userDoc(request.auth.uid).data.status == 'approved';
     }
 
     match /contacts/{contactId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null;
+      // Admins are provisioned through the console and may not always carry a
+      // stored status field, so admins always retain contact access.
+      allow read: if isApproved() || isAdmin();
+      allow create, update, delete: if isAdmin();
     }
 
     match /users/{uid} {
-      allow read: if request.auth != null && request.auth.uid == uid;
-      allow write: if request.auth != null && request.auth.uid == uid;
+      // Users can read their own profile; admins can read any profile
+      // (needed for pending approvals and user management).
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+
+      // Self-registration: a user may only create their own profile as a
+      // pending, non-admin registration.
+      allow create: if isSignedIn() && request.auth.uid == uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.role == 'user'
+        && request.resource.data.status == 'pending';
+
+      // Users may update only their own non-protected profile fields.
+      // role, status, approvedAt, approvedBy, declinedAt, declinedBy and
+      // declineReason can never be changed by the account owner.
+      allow update: if isSignedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'fullName', 'category', 'retired', 'rank', 'branch', 'trade',
+          'course', 'commissionDate', 'designation', 'office', 'mobile', 'updatedAt'
+        ]);
+
+      // Admins may change role, status, approval fields, etc.
+      allow update: if isAdmin();
+    }
+
+    // BD Number -> identity mapping used only for login. It contains no
+    // password material and no profile data. It must be readable before
+    // authentication so users can sign in with their BD Number.
+    match /userLookup/{bdNumber} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
     }
   }
 }

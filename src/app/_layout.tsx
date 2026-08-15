@@ -4,10 +4,9 @@ import { Stack, useSegments, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { PaperProvider } from 'react-native-paper';
-import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { LightTheme, DarkTheme } from '@/constants/theme';
+import { createAppTheme, useIsDark } from '@/constants/theme';
 import { useAuthStore } from '@/store/authStore';
 import { useSyncStore } from '@/store/syncStore';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -18,18 +17,15 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 SplashScreen.preventAutoHideAsync();
 
-function useIsDark(): boolean {
-  const themeSetting = useSettingsStore((s) => s.theme);
-  const systemScheme = useColorScheme();
-  if (themeSetting === 'system') return systemScheme === 'dark';
-  return themeSetting === 'dark';
-}
-
 export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);
   const isDark = useIsDark();
-  const paperTheme = isDark ? DarkTheme : LightTheme;
+  // App-wide theme stays on the System font; the Oswald display type is
+  // applied only to the auth screens via the nested provider in (auth)/_layout.
+  const paperTheme = createAppTheme(isDark, false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const canAccessContacts = useAuthStore((s) => s.canAccessContacts);
+  const authInitialized = useAuthStore((s) => s.authInitialized);
   const router = useRouter();
   const segments = useSegments();
   const cleanupRef = useRef<(() => void)[]>([]);
@@ -92,14 +88,25 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (!appReady) return;
+    if (!appReady || !authInitialized) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    const inAdminGroup = segments[0] === 'admin';
 
-    if (isAuthenticated && inAuthGroup) {
-      router.replace('/(tabs)' as any);
+    if (isAuthenticated) {
+      if (canAccessContacts) {
+        // Approved user (or admin): keep them out of the auth screens.
+        if (inAuthGroup) router.replace('/(tabs)' as any);
+      } else {
+        // pending / declined / suspended: no contact access, show status.
+        const segs = segments as string[];
+        const onStatusScreen = inAuthGroup && segs[1] === 'account-status';
+        if (!onStatusScreen) router.replace('/(auth)/account-status' as any);
+      }
+    } else if (!inAuthGroup && !inAdminGroup) {
+      router.replace('/(auth)/login' as any);
     }
-  }, [isAuthenticated, appReady, segments]);
+  }, [isAuthenticated, canAccessContacts, authInitialized, appReady, segments]);
 
   if (!appReady) return null;
 
@@ -112,6 +119,7 @@ export default function RootLayout() {
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="(auth)" />
               <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="admin" options={{ headerShown: false }} />
               <Stack.Screen
                 name="contact/[id]"
                 options={{ headerShown: true, title: 'Contact Details', presentation: 'card' }}
