@@ -1,5 +1,13 @@
-import { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Pressable } from 'react-native';
+import { useRef, useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Pressable,
+  type LayoutChangeEvent,
+} from 'react-native';
 import {
   Text,
   TextInput,
@@ -16,6 +24,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { requestRegistration } from '@/firebase/auth';
 import { validateRegistration, ValidationError } from '@/utils/validation';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import { DateField } from '@/components/ui/DateField';
 import { AuthHeader } from '@/components/auth/AuthHeader';
 import { CATEGORY_LABELS, UserCategory } from '@/types/auth';
@@ -76,6 +85,26 @@ export default function RegisterScreen() {
   const [successVisible, setSuccessVisible] = useState(false);
   const [snackbar, setSnackbar] = useState({ visible: false, message: '' });
 
+  // Auto-scroll the focused field above the keyboard. With Android
+  // edge-to-edge the native auto-scroll does not always kick in, so we scroll
+  // explicitly on focus using the field's offset relative to the form card
+  // (cardY + fieldY = offset from the top of the ScrollView content).
+  const scrollRef = useRef<ScrollView>(null);
+  const layoutRef = useRef({ cardY: 0, fields: {} as Record<string, number> });
+
+  function captureLayout(field: string) {
+    return (e: LayoutChangeEvent) => {
+      layoutRef.current.fields[field] = e.nativeEvent.layout.y;
+    };
+  }
+
+  function handleFocus(field: string) {
+    const { cardY, fields } = layoutRef.current;
+    const y = fields[field];
+    if (y == null) return;
+    scrollRef.current?.scrollTo({ y: Math.max(0, cardY + y - 96), animated: true });
+  }
+
   function showSnackbar(message: string) {
     setSnackbar({ visible: true, message });
   }
@@ -125,7 +154,7 @@ export default function RegisterScreen() {
       await requestRegistration(input);
       setSuccessVisible(true);
     } catch (e: any) {
-      showSnackbar(e.message || 'Registration failed. Please try again.');
+      showSnackbar(getFriendlyErrorMessage(e, 'Registration failed. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -137,7 +166,11 @@ export default function RegisterScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.flex}
       >
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          ref={scrollRef}
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+        >
           <AuthHeader
             compact
             showBack
@@ -147,6 +180,9 @@ export default function RegisterScreen() {
           />
 
           <View
+            onLayout={(e) => {
+              layoutRef.current.cardY = e.nativeEvent.layout.y;
+            }}
             style={[
               styles.card,
               {
@@ -161,6 +197,8 @@ export default function RegisterScreen() {
               label="Full Name *"
               value={form.fullName}
               onChangeText={(t) => updateField('fullName', t)}
+              onFocus={() => handleFocus('fullName')}
+              onLayout={captureLayout('fullName')}
               mode="outlined"
               style={styles.input}
               outlineStyle={styles.inputOutline}
@@ -186,6 +224,8 @@ export default function RegisterScreen() {
               label={form.category === 'Civilian' ? 'Service Number *' : 'BD Number *'}
               value={form.bdNumber}
               onChangeText={(t) => updateField('bdNumber', t.replace(/[^\d]/g, ''))}
+              onFocus={() => handleFocus('bdNumber')}
+              onLayout={captureLayout('bdNumber')}
               mode="outlined"
               keyboardType="number-pad"
               placeholder={form.category === 'Airman' ? 'e.g. 470504' : undefined}
@@ -215,6 +255,8 @@ export default function RegisterScreen() {
               label="Rank *"
               value={form.rank}
               onChangeText={(t) => updateField('rank', t)}
+              onFocus={() => handleFocus('rank')}
+              onLayout={captureLayout('rank')}
               mode="outlined"
               style={styles.input}
               outlineStyle={styles.inputOutline}
@@ -226,6 +268,8 @@ export default function RegisterScreen() {
               label={`${CATEGORY_LABELS[form.category].branch} *`}
               value={form.branch}
               onChangeText={(t) => updateField('branch', t)}
+              onFocus={() => handleFocus('branch')}
+              onLayout={captureLayout('branch')}
               mode="outlined"
               placeholder={form.category === 'Airman' ? 'e.g. GS' : undefined}
               style={styles.input}
@@ -239,6 +283,8 @@ export default function RegisterScreen() {
                 label={form.category === 'Airman' ? 'Entry' : 'Course'}
                 value={form.course}
                 onChangeText={(t) => updateField('course', t)}
+                onFocus={() => handleFocus('course')}
+                onLayout={captureLayout('course')}
                 mode="outlined"
                 placeholder={form.category === 'Airman' ? 'e.g. 40' : 'e.g. DE2022B'}
                 style={styles.input}
@@ -260,6 +306,8 @@ export default function RegisterScreen() {
               label="Designation"
               value={form.designation}
               onChangeText={(t) => updateField('designation', t)}
+              onFocus={() => handleFocus('designation')}
+              onLayout={captureLayout('designation')}
               mode="outlined"
               style={styles.input}
               outlineStyle={styles.inputOutline}
@@ -269,6 +317,8 @@ export default function RegisterScreen() {
               label="Office/Unit"
               value={form.office}
               onChangeText={(t) => updateField('office', t)}
+              onFocus={() => handleFocus('office')}
+              onLayout={captureLayout('office')}
               mode="outlined"
               style={styles.input}
               outlineStyle={styles.inputOutline}
@@ -280,6 +330,8 @@ export default function RegisterScreen() {
               label="Email *"
               value={form.email}
               onChangeText={(t) => updateField('email', t)}
+              onFocus={() => handleFocus('email')}
+              onLayout={captureLayout('email')}
               mode="outlined"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -294,6 +346,8 @@ export default function RegisterScreen() {
               label="Mobile Number *"
               value={form.mobile}
               onChangeText={(t) => updateField('mobile', t)}
+              onFocus={() => handleFocus('mobile')}
+              onLayout={captureLayout('mobile')}
               mode="outlined"
               keyboardType="phone-pad"
               style={styles.input}
@@ -308,6 +362,8 @@ export default function RegisterScreen() {
               label="Password *"
               value={form.password}
               onChangeText={(t) => updateField('password', t)}
+              onFocus={() => handleFocus('password')}
+              onLayout={captureLayout('password')}
               mode="outlined"
               secureTextEntry={!showPassword}
               autoCapitalize="none"
@@ -327,6 +383,8 @@ export default function RegisterScreen() {
               label="Confirm Password *"
               value={form.confirmPassword}
               onChangeText={(t) => updateField('confirmPassword', t)}
+              onFocus={() => handleFocus('confirmPassword')}
+              onLayout={captureLayout('confirmPassword')}
               mode="outlined"
               secureTextEntry={!showConfirmPassword}
               autoCapitalize="none"

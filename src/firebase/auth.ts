@@ -115,7 +115,9 @@ function fallbackUser(firebaseUser: FirebaseUser): AppUser {
 export async function getUserProfile(uid: string): Promise<UserProfile> {
   const db = getFirebaseDb();
   const d = await getDoc(doc(db, COLLECTIONS.USERS, uid));
-  if (!d.exists()) throw new Error('User profile not found');
+  if (!d.exists()) {
+    throw new Error('Your account profile could not be loaded. Please contact the administrator.');
+  }
   return profileFromFirestore(d.id, d.data());
 }
 

@@ -1,6 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Button, useTheme } from 'react-native-paper';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 
 interface Props {
   children: ReactNode;
@@ -40,7 +41,7 @@ function ErrorFallback({ error, onReset }: { error: Error | null; onReset: () =>
         Something went wrong
       </Text>
       <Text variant="bodyMedium" style={styles.message}>
-        {error?.message || 'An unexpected error occurred'}
+        {getFriendlyErrorMessage(error, 'An unexpected error occurred')}
       </Text>
       <Button mode="contained" onPress={onReset} style={styles.button}>
         Try Again

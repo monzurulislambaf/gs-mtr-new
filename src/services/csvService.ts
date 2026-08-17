@@ -3,6 +3,7 @@ import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { ContactInput } from '@/types/contact';
 import { getAllContacts } from '@/database/database';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 
 const CSV_HEADER = [
   'BD NO', 'RANK', 'NAME', 'DESIGNATION', 'BRANCH / TRADE',
@@ -128,6 +129,6 @@ export async function bulkImportFromCsv(
     const imported = await importFn(contacts);
     return { imported, skipped: contacts.length - imported, errors: [] };
   } catch (error: any) {
-    return { imported: 0, skipped: contacts.length, errors: [error.message] };
+    return { imported: 0, skipped: contacts.length, errors: [getFriendlyErrorMessage(error)] };
   }
 }

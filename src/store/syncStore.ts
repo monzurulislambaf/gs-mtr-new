@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { performIncrementalSync, checkConnectivity, onConnectivityChange } from '@/database/sync';
 import { useAuthStore } from '@/store/authStore';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 
 interface SyncStore {
   lastSyncTime: number | null;
@@ -68,7 +69,7 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
     } catch (error: any) {
       set({
         isSyncing: false,
-        syncError: error.message || 'Sync failed',
+        syncError: getFriendlyErrorMessage(error, 'Sync failed'),
       });
       console.error('[SYNC] Firebase sync failed:', error?.message || error);
     }

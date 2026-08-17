@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
 import { APP_NAME } from '@/utils/constants';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import { AuthHeader } from '@/components/auth/AuthHeader';
 
 const REMEMBER_KEY = 'gs_mtr_remember_me';
@@ -51,7 +52,7 @@ export default function LoginScreen() {
       await login(bdNumber.trim(), password, rememberMe);
       // Routing (tabs vs. account status) is handled by the root layout guard.
     } catch (e: any) {
-      setError(e.message || 'Sign in failed. Please check your credentials.');
+      setError(getFriendlyErrorMessage(e, 'Sign in failed. Please check your credentials.'));
     } finally {
       setLoading(false);
     }

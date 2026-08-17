@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Button, useTheme, ActivityIndicator } from 'react-native-paper';
+import { Text, Button, useTheme, ActivityIndicator, Snackbar, Portal } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
 import { APP_NAME } from '@/utils/constants';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import { AuthHeader } from '@/components/auth/AuthHeader';
 
 function getStatusContent(status: string | undefined, declineReason?: string) {
@@ -48,22 +49,38 @@ export default function AccountStatusScreen() {
   const logout = useAuthStore((s) => s.logout);
   const refreshProfile = useAuthStore((s) => s.refreshProfile);
   const [refreshing, setRefreshing] = useState(false);
+  const [snackbar, setSnackbar] = useState({ visible: false, message: '' });
 
   const content = getStatusContent(user?.status, user?.declineReason);
 
   async function handleRefresh() {
     setRefreshing(true);
-    await refreshProfile();
-    // If the status is now approved, the root layout guard navigates to tabs.
-    if (useAuthStore.getState().canAccessContacts) {
-      router.replace('/(tabs)' as any);
+    try {
+      await refreshProfile();
+      // If the status is now approved, the root layout guard navigates to tabs.
+      if (useAuthStore.getState().canAccessContacts) {
+        router.replace('/(tabs)' as any);
+      }
+    } catch (e: any) {
+      setSnackbar({
+        visible: true,
+        message: getFriendlyErrorMessage(e, 'Could not check your account status. Please try again.'),
+      });
+    } finally {
+      setRefreshing(false);
     }
-    setRefreshing(false);
   }
 
   async function handleLogout() {
-    await logout();
-    router.replace('/(auth)/login' as any);
+    try {
+      await logout();
+      router.replace('/(auth)/login' as any);
+    } catch (e: any) {
+      setSnackbar({
+        visible: true,
+        message: getFriendlyErrorMessage(e, 'Could not sign out. Please try again.'),
+      });
+    }
   }
 
   return (
@@ -138,6 +155,16 @@ export default function AccountStatusScreen() {
           <ActivityIndicator color={theme.colors.primary} />
         </View>
       ) : null}
+
+      <Portal>
+        <Snackbar
+          visible={snackbar.visible}
+          onDismiss={() => setSnackbar({ ...snackbar, visible: false })}
+          duration={3000}
+        >
+          {snackbar.message}
+        </Snackbar>
+      </Portal>
     </SafeAreaView>
   );
 }

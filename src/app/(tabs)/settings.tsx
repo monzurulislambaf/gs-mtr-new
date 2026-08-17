@@ -22,6 +22,7 @@ import { getAllContactsCount } from '@/database/database';
 import { exportContactsToCsv, bulkImportFromCsv } from '@/services/csvService';
 import { bulkImportContacts } from '@/firebase/firestore';
 import { APP_NAME, APP_VERSION } from '@/utils/constants';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import { HeaderActions } from '@/components/ui/HeaderActions';
 
 export default function SettingsScreen() {
@@ -54,7 +55,7 @@ export default function SettingsScreen() {
       await exportContactsToCsv();
       showSnackbar('Contacts exported');
     } catch (e: any) {
-      showSnackbar(e.message || 'Export failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Export failed'));
     } finally {
       setExporting(false);
     }
@@ -68,7 +69,7 @@ export default function SettingsScreen() {
       getAllContactsCount().then(setContactCount);
       showSnackbar(`Imported: ${result.imported}, Skipped: ${result.skipped}`);
     } catch (e: any) {
-      showSnackbar(e.message || 'Import failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Import failed'));
     } finally {
       setImporting(false);
     }
@@ -110,33 +111,6 @@ export default function SettingsScreen() {
               onPress={() => router.push('/(auth)/login' as any)}
             />
           )}
-        </List.Section>
-
-        <Divider />
-
-        <List.Section>
-          <List.Subheader style={{ color: theme.colors.primary }}>
-            Appearance
-          </List.Subheader>
-          <List.Item
-            title="Theme"
-            description={themeMode === 'system' ? 'System' : themeMode === 'dark' ? 'Dark' : 'Light'}
-            left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
-            onPress={() => setShowThemeDialog(true)}
-          />
-        </List.Section>
-
-        <Divider />
-
-        <List.Section>
-          <List.Subheader style={{ color: theme.colors.primary }}>
-            Synchronization
-          </List.Subheader>
-          <List.Item
-            title="Synced Contacts"
-            description={`${contactCount} contacts`}
-            left={(props) => <List.Icon {...props} icon="contacts" />}
-          />
         </List.Section>
 
         {isAdmin && (
@@ -203,6 +177,33 @@ export default function SettingsScreen() {
             </List.Section>
           </>
         )}
+
+        <Divider />
+
+        <List.Section>
+          <List.Subheader style={{ color: theme.colors.primary }}>
+            Appearance
+          </List.Subheader>
+          <List.Item
+            title="Theme"
+            description={themeMode === 'system' ? 'System' : themeMode === 'dark' ? 'Dark' : 'Light'}
+            left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
+            onPress={() => setShowThemeDialog(true)}
+          />
+        </List.Section>
+
+        <Divider />
+
+        <List.Section>
+          <List.Subheader style={{ color: theme.colors.primary }}>
+            Synchronization
+          </List.Subheader>
+          <List.Item
+            title="Synced Contacts"
+            description={`${contactCount} contacts`}
+            left={(props) => <List.Icon {...props} icon="contacts" />}
+          />
+        </List.Section>
 
         <Divider />
 
@@ -300,7 +301,9 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   scroll: {
-    paddingBottom: 80,
+    // Extra clearance so the last list items never sit flush against the
+    // bottom tab bar / system navigation (back button) area.
+    paddingBottom: 120,
   },
   badgeWrap: {
     justifyContent: 'center',

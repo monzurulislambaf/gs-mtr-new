@@ -21,6 +21,7 @@ import { deleteContact } from '@/services/contactService';
 import { useAuthStore } from '@/store/authStore';
 import { makePhoneCall, copyToClipboard } from '@/utils/permissions';
 import { formatPhone, formatDateTime } from '@/utils/formatters';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system/legacy';
 
@@ -72,7 +73,7 @@ export default function ContactDetailsScreen() {
       showSnackbar('Contact deleted');
       router.back();
     } catch (e: any) {
-      showSnackbar(e.message || 'Delete failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Delete failed'));
     }
   }
 

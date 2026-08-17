@@ -16,6 +16,7 @@ import { isAdminRole, UserProfile } from '@/types/auth';
 import { ContactAvatar } from '@/components/ui/ContactAvatar';
 import { StatusBadge, STATUS_COLORS } from '@/components/ui/StatusBadge';
 import { UserManageDialog } from '@/components/admin/UserManageDialog';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 
 type Action = 'make-admin' | 'make-user' | 'delete';
 
@@ -36,7 +37,7 @@ export default function UserManagementScreen() {
       const list = await getAllUsers();
       setUsers(list);
     } catch (e: any) {
-      showSnackbar(e.message || 'Failed to load users');
+      showSnackbar(getFriendlyErrorMessage(e, 'Failed to load users'));
     } finally {
       setLoading(false);
     }
@@ -68,7 +69,7 @@ export default function UserManagementScreen() {
       setSelected(null);
       load();
     } catch (e: any) {
-      showSnackbar(e.message || 'Action failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Action failed'));
     } finally {
       setBusy(false);
     }

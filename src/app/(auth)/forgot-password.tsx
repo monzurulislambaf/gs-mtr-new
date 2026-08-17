@@ -4,24 +4,8 @@ import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-pape
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { resetPassword } from '@/firebase/auth';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import { AuthHeader } from '@/components/auth/AuthHeader';
-
-function friendlyError(e: any): string {
-  const code: string = e?.code || '';
-  switch (code) {
-    case 'auth/user-not-found':
-      return 'No account found with this email address.';
-    case 'auth/invalid-email':
-      return 'Please enter a valid email address.';
-    case 'auth/too-many-requests':
-      return 'Too many reset requests. Please try again in a few minutes.';
-    case 'auth/network-request-failed':
-      return 'Network error. Check your connection and try again.';
-    default:
-      return e?.message?.replace(/^Firebase: Error \(([^)]+)\)\.\s*/, '') ||
-        'Password reset failed. Please try again.';
-  }
-}
 
 export default function ForgotPasswordScreen() {
   const theme = useTheme();
@@ -41,7 +25,7 @@ export default function ForgotPasswordScreen() {
       await resetPassword(identifier);
       setSent(true);
     } catch (e: any) {
-      setError(friendlyError(e));
+      setError(getFriendlyErrorMessage(e, 'Password reset failed. Please try again.'));
     } finally {
       setLoading(false);
     }

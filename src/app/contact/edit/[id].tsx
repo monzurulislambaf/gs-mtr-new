@@ -13,9 +13,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { editContact } from '@/services/contactService';
 import { validateContact } from '@/utils/validation';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import { useContactsStore } from '@/store/contactsStore';
 import { Contact } from '@/types/contact';
 import * as db from '@/database/database';
+import { useScrollToFocusedField } from '@/hooks/useScrollToFocusedField';
 
 interface FormData {
   'BD NO': string;
@@ -36,6 +38,7 @@ export default function EditContactScreen() {
   const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const loadContacts = useContactsStore((s) => s.loadContacts);
+  const { scrollRef, captureLayout, focusField } = useScrollToFocusedField();
   const [form, setForm] = useState<FormData | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -92,7 +95,7 @@ export default function EditContactScreen() {
       showSnackbar('Contact updated');
       setTimeout(() => router.back(), 500);
     } catch (e: any) {
-      showSnackbar(e.message || 'Update failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Update failed'));
     } finally {
       setLoading(false);
     }
@@ -112,26 +115,30 @@ export default function EditContactScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.flex}
       >
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-          <TextInput label="BD NO" value={form['BD NO']} onChangeText={(t) => updateField('BD NO', t)} mode="outlined" style={styles.input} error={!!errors['BD NO']} />
+        <ScrollView
+          ref={scrollRef}
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+        >
+          <TextInput label="BD NO" value={form['BD NO']} onChangeText={(t) => updateField('BD NO', t)} onFocus={() => focusField('BD NO')} onLayout={captureLayout('BD NO')} mode="outlined" style={styles.input} error={!!errors['BD NO']} />
           {errors['BD NO'] && <HelperText type="error">{errors['BD NO']}</HelperText>}
-          <TextInput label="RANK" value={form.RANK} onChangeText={(t) => updateField('RANK', t)} mode="outlined" style={styles.input} error={!!errors.RANK} />
+          <TextInput label="RANK" value={form.RANK} onChangeText={(t) => updateField('RANK', t)} onFocus={() => focusField('RANK')} onLayout={captureLayout('RANK')} mode="outlined" style={styles.input} error={!!errors.RANK} />
           {errors.RANK && <HelperText type="error">{errors.RANK}</HelperText>}
-          <TextInput label="NAME" value={form.NAME} onChangeText={(t) => updateField('NAME', t)} mode="outlined" style={styles.input} error={!!errors.NAME} />
+          <TextInput label="NAME" value={form.NAME} onChangeText={(t) => updateField('NAME', t)} onFocus={() => focusField('NAME')} onLayout={captureLayout('NAME')} mode="outlined" style={styles.input} error={!!errors.NAME} />
           {errors.NAME && <HelperText type="error">{errors.NAME}</HelperText>}
-          <TextInput label="DESIGNATION" value={form.DESIGNATION} onChangeText={(t) => updateField('DESIGNATION', t)} mode="outlined" style={styles.input} />
-          <TextInput label="BRANCH / TRADE" value={form['BRANCH / TRADE']} onChangeText={(t) => updateField('BRANCH / TRADE', t)} mode="outlined" style={styles.input} />
-          <TextInput label="OFFICE ADDRESS" value={form['OFFICE ADDRESS']} onChangeText={(t) => updateField('OFFICE ADDRESS', t)} mode="outlined" style={styles.input} />
-          <TextInput label="RESIDENCE ADDRESS" value={form['RESIDENCE ADDRESS']} onChangeText={(t) => updateField('RESIDENCE ADDRESS', t)} mode="outlined" style={styles.input} />
-          <TextInput label="SERVICE MOBILE" value={form['SERVICE MOBILE']} onChangeText={(t) => updateField('SERVICE MOBILE', t)} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['SERVICE MOBILE']} />
+          <TextInput label="DESIGNATION" value={form.DESIGNATION} onChangeText={(t) => updateField('DESIGNATION', t)} onFocus={() => focusField('DESIGNATION')} onLayout={captureLayout('DESIGNATION')} mode="outlined" style={styles.input} />
+          <TextInput label="BRANCH / TRADE" value={form['BRANCH / TRADE']} onChangeText={(t) => updateField('BRANCH / TRADE', t)} onFocus={() => focusField('BRANCH / TRADE')} onLayout={captureLayout('BRANCH / TRADE')} mode="outlined" style={styles.input} />
+          <TextInput label="OFFICE ADDRESS" value={form['OFFICE ADDRESS']} onChangeText={(t) => updateField('OFFICE ADDRESS', t)} onFocus={() => focusField('OFFICE ADDRESS')} onLayout={captureLayout('OFFICE ADDRESS')} mode="outlined" style={styles.input} />
+          <TextInput label="RESIDENCE ADDRESS" value={form['RESIDENCE ADDRESS']} onChangeText={(t) => updateField('RESIDENCE ADDRESS', t)} onFocus={() => focusField('RESIDENCE ADDRESS')} onLayout={captureLayout('RESIDENCE ADDRESS')} mode="outlined" style={styles.input} />
+          <TextInput label="SERVICE MOBILE" value={form['SERVICE MOBILE']} onChangeText={(t) => updateField('SERVICE MOBILE', t)} onFocus={() => focusField('SERVICE MOBILE')} onLayout={captureLayout('SERVICE MOBILE')} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['SERVICE MOBILE']} />
           {errors['SERVICE MOBILE'] && <HelperText type="error">{errors['SERVICE MOBILE']}</HelperText>}
-          <TextInput label="PERSONAL MOBILE" value={form['PERSONAL MOBILE']} onChangeText={(t) => updateField('PERSONAL MOBILE', t)} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['PERSONAL MOBILE']} />
+          <TextInput label="PERSONAL MOBILE" value={form['PERSONAL MOBILE']} onChangeText={(t) => updateField('PERSONAL MOBILE', t)} onFocus={() => focusField('PERSONAL MOBILE')} onLayout={captureLayout('PERSONAL MOBILE')} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['PERSONAL MOBILE']} />
           {errors['PERSONAL MOBILE'] && <HelperText type="error">{errors['PERSONAL MOBILE']}</HelperText>}
-          <TextInput label="OFFICE TELEPHONE" value={form['OFFICE TELEPHONE']} onChangeText={(t) => updateField('OFFICE TELEPHONE', t)} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['OFFICE TELEPHONE']} />
+          <TextInput label="OFFICE TELEPHONE" value={form['OFFICE TELEPHONE']} onChangeText={(t) => updateField('OFFICE TELEPHONE', t)} onFocus={() => focusField('OFFICE TELEPHONE')} onLayout={captureLayout('OFFICE TELEPHONE')} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['OFFICE TELEPHONE']} />
           {errors['OFFICE TELEPHONE'] && <HelperText type="error">{errors['OFFICE TELEPHONE']}</HelperText>}
-          <TextInput label="RESIDENCE TELEPHONE" value={form['PERSONAL TELEPHONE']} onChangeText={(t) => updateField('PERSONAL TELEPHONE', t)} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['PERSONAL TELEPHONE']} />
+          <TextInput label="RESIDENCE TELEPHONE" value={form['PERSONAL TELEPHONE']} onChangeText={(t) => updateField('PERSONAL TELEPHONE', t)} onFocus={() => focusField('PERSONAL TELEPHONE')} onLayout={captureLayout('PERSONAL TELEPHONE')} mode="outlined" keyboardType="phone-pad" style={styles.input} error={!!errors['PERSONAL TELEPHONE']} />
           {errors['PERSONAL TELEPHONE'] && <HelperText type="error">{errors['PERSONAL TELEPHONE']}</HelperText>}
-          <TextInput label="REMARKS" value={form.REMARKS} onChangeText={(t) => updateField('REMARKS', t)} mode="outlined" multiline numberOfLines={3} style={styles.input} />
+          <TextInput label="REMARKS" value={form.REMARKS} onChangeText={(t) => updateField('REMARKS', t)} onFocus={() => focusField('REMARKS')} onLayout={captureLayout('REMARKS')} mode="outlined" multiline numberOfLines={3} style={styles.input} />
           <Button mode="contained" onPress={handleSave} loading={loading} disabled={loading} style={styles.saveButton} contentStyle={styles.saveButtonContent}>
             Update Contact
           </Button>

@@ -18,6 +18,7 @@ import { getUserProfileById, approveRegistration, declineRegistration } from '@/
 import { useAuthStore } from '@/store/authStore';
 import { CATEGORY_LABELS, UserProfile } from '@/types/auth';
 import { formatDateTime } from '@/utils/formatters';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import { ContactAvatar } from '@/components/ui/ContactAvatar';
 import { StatusBadge, STATUS_COLORS } from '@/components/ui/StatusBadge';
 
@@ -54,7 +55,11 @@ export default function ApprovalDetailScreen() {
       .then((p) => {
         if (mounted) setProfile(p);
       })
-      .catch(() => {})
+      .catch((e: any) => {
+        if (mounted) {
+          showSnackbar(getFriendlyErrorMessage(e, 'Failed to load registration details'));
+        }
+      })
       .finally(() => {
         if (mounted) setLoading(false);
       });
@@ -74,7 +79,7 @@ export default function ApprovalDetailScreen() {
       showSnackbar('Registration approved successfully.');
       setTimeout(() => router.back(), 600);
     } catch (e: any) {
-      showSnackbar(e.message || 'Approval failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Approval failed'));
       setApproveDialog(false);
     } finally {
       setBusy(false);
@@ -90,7 +95,7 @@ export default function ApprovalDetailScreen() {
       showSnackbar('Registration declined.');
       setTimeout(() => router.back(), 600);
     } catch (e: any) {
-      showSnackbar(e.message || 'Decline failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Decline failed'));
       setDeclineDialog(false);
     } finally {
       setBusy(false);

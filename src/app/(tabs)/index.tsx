@@ -17,6 +17,7 @@ import { HeaderActions } from '@/components/ui/HeaderActions';
 import { Contact } from '@/types/contact';
 import { deleteContact } from '@/services/contactService';
 import { restoreContactById } from '@/services/contactService';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -57,7 +58,7 @@ export default function HomeScreen() {
       clearSelection();
       showSnackbar(`${ids.length} contact(s) deleted`);
     } catch (e: any) {
-      showSnackbar(e.message || 'Batch delete failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Batch delete failed'));
     }
   }, [selectedIds, clearSelection, showSnackbar]);
 
@@ -71,7 +72,7 @@ export default function HomeScreen() {
       clearSelection();
       showSnackbar(`${ids.length} contact(s) restored`);
     } catch (e: any) {
-      showSnackbar(e.message || 'Restore failed');
+      showSnackbar(getFriendlyErrorMessage(e, 'Restore failed'));
     }
   }, [selectedIds, clearSelection, showSnackbar]);
   const listRef = useRef<FlashListRef<Contact>>(null);

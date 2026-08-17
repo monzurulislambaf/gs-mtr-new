@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import { checkConnectivity } from '@/database/sync';
+import { getFriendlyErrorMessage } from '@/utils/errors';
 import {
   checkForUpdate,
   downloadUpdate,
@@ -144,7 +145,7 @@ export function useAppUpdate(): UseAppUpdateResult {
       }, 1500);
     } catch (e: any) {
       console.error('[UPDATE] Download/install failed:', e);
-      setError(e?.message || 'Update download failed.');
+      setError(getFriendlyErrorMessage(e, 'Update download failed.'));
       setPhase('failed');
     }
   }, [info, runCheck]);

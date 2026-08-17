@@ -182,14 +182,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   refreshProfile: async () => {
     const current = get().user;
     if (!current) return;
-    try {
-      const { getUserProfile } = await import('@/firebase/auth');
-      const profile = await getUserProfile(current.uid);
-      const next = toAppUser(profile);
-      set({ ...computeFlags(next) });
-      await cacheSession(next);
-    } catch {
-      // Offline: keep the cached session.
-    }
+    // Errors are propagated to the caller (account-status screen) so the user
+    // sees a friendly message; the cached session is kept untouched on failure.
+    const { getUserProfile } = await import('@/firebase/auth');
+    const profile = await getUserProfile(current.uid);
+    const next = toAppUser(profile);
+    set({ ...computeFlags(next) });
+    await cacheSession(next);
   },
 }));
