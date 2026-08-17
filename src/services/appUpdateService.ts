@@ -109,6 +109,11 @@ export async function checkForUpdate(): Promise<UpdateCheckResult> {
     releaseNotes: '',
   };
 
+  // Fail open when the installed version cannot be resolved: forcing an
+  // update with an unknown current version would loop forever ("Update
+  // Required" on every launch, even after installing the new APK).
+  if (currentVersion === DEFAULT_VERSION) return base;
+
   const config = await getRemoteAppConfig();
   if (!config) return base;
 

@@ -4,6 +4,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
@@ -69,6 +70,15 @@ export function listenPendingRegistrations(
 
 export async function getAllUsers(): Promise<UserProfile[]> {
   const snapshot = await getDocs(collection(db(), COLLECTIONS.USERS));
+  return snapshot.docs.map((d) => profileFromFirestore(d.id, d.data()));
+}
+
+export async function getAdminUsers(): Promise<UserProfile[]> {
+  const q = query(
+    collection(db(), COLLECTIONS.USERS),
+    where('role', 'in', ['admin', 'super_admin'])
+  );
+  const snapshot = await getDocs(q);
   return snapshot.docs.map((d) => profileFromFirestore(d.id, d.data()));
 }
 
@@ -149,6 +159,19 @@ export async function setUserRole(uid: string, role: UserRole): Promise<void> {
     { role, updatedAt: serverTimestamp() },
     { merge: true }
   );
+}
+
+/** Permanently delete a user's profile and their BD-number login mapping. */
+export async function deleteUser(uid: string, bdNumber?: string): Promise<void> {
+  const database = db();
+  if (bdNumber) {
+    const lookupRef = doc(database, COLLECTIONS.USER_LOOKUP, bdNumber);
+    const lookup = await getDoc(lookupRef);
+    if (lookup.exists() && lookup.data().uid === uid) {
+      await deleteDoc(lookupRef);
+    }
+  }
+  await deleteDoc(doc(database, COLLECTIONS.USERS, uid));
 }
 
 export function userToAppUser(profile: UserProfile): AppUser {

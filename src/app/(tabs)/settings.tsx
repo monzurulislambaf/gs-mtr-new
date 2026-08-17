@@ -168,6 +168,12 @@ export default function SettingsScreen() {
                 left={(props) => <List.Icon {...props} icon="account-group" />}
                 onPress={() => router.push('/admin/users' as any)}
               />
+              <List.Item
+                title="Admin Users"
+                description="View all admin users"
+                left={(props) => <List.Icon {...props} icon="shield-account" />}
+                onPress={() => router.push('/admin/admin-users' as any)}
+              />
             </List.Section>
           </>
         )}

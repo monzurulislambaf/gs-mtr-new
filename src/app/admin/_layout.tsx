@@ -25,6 +25,7 @@ export default function AdminLayout() {
       <Stack.Screen name="pending-approvals" options={{ title: 'Pending Approvals' }} />
       <Stack.Screen name="approval/[id]" options={{ title: 'Registration Details' }} />
       <Stack.Screen name="users" options={{ title: 'User Management' }} />
+      <Stack.Screen name="admin-users" options={{ title: 'Admin Users' }} />
     </Stack>
   );
 }

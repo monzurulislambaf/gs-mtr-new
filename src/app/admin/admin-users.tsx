@@ -10,16 +10,16 @@ import {
   Button,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { deleteUser, getAllUsers, setUserRole } from '@/firebase/userService';
+import { deleteUser, getAdminUsers, setUserRole } from '@/firebase/userService';
 import { useAuthStore } from '@/store/authStore';
 import { isAdminRole, UserProfile } from '@/types/auth';
 import { ContactAvatar } from '@/components/ui/ContactAvatar';
 import { StatusBadge, STATUS_COLORS } from '@/components/ui/StatusBadge';
 import { UserManageDialog } from '@/components/admin/UserManageDialog';
 
-type Action = 'make-admin' | 'make-user' | 'delete';
+type Action = 'make-user' | 'delete';
 
-export default function UserManagementScreen() {
+export default function AdminUsersScreen() {
   const theme = useTheme();
   const me = useAuthStore((s) => s.user);
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -33,10 +33,10 @@ export default function UserManagementScreen() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const list = await getAllUsers();
+      const list = await getAdminUsers();
       setUsers(list);
-    } catch (e: any) {
-      showSnackbar(e.message || 'Failed to load users');
+    } catch {
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -54,10 +54,7 @@ export default function UserManagementScreen() {
     if (!selected) return;
     setBusy(true);
     try {
-      if (action === 'make-admin') {
-        await setUserRole(selected.uid, 'admin');
-        showSnackbar(`${selected.fullName || selected.email} is now an admin.`);
-      } else if (action === 'make-user') {
+      if (action === 'make-user') {
         await setUserRole(selected.uid, 'user');
         showSnackbar(`${selected.fullName || selected.email} is now a regular user.`);
       } else if (action === 'delete') {
@@ -170,7 +167,7 @@ export default function UserManagementScreen() {
         ListEmptyComponent={
           <View style={styles.center}>
             <Text variant="bodyLarge" style={{ color: theme.colors.onSurfaceVariant }}>
-              {query ? 'No users match your search' : 'No users found'}
+              {query ? 'No admin users match your search' : 'No admin users found'}
             </Text>
           </View>
         }
@@ -183,8 +180,8 @@ export default function UserManagementScreen() {
           user={selected}
           canManage={canManage}
           busy={busy}
+          showMakeAdmin={false}
           onDismiss={() => setSelected(null)}
-          onMakeAdmin={() => runAction('make-admin')}
           onMakeUser={() => runAction('make-user')}
           onRequestDelete={() => setShowDeleteDialog(true)}
         />

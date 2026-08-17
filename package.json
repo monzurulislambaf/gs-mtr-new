@@ -12,6 +12,7 @@
     "@shopify/flash-list": "2.0.2",
     "@tanstack/react-query": "^5.67.0",
     "expo": "~57.0.9",
+    "expo-application": "~57.0.2",
     "expo-clipboard": "^57.0.1",
     "expo-constants": "~57.0.8",
     "expo-device": "^57.0.1",
@@ -51,6 +52,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.1",
     "firebase-admin": "^14.2.0",
     "typescript": "~6.0.3"
   },
