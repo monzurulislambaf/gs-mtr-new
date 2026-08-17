@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
 # dependencies
 node_modules/
 
@@ -11,19 +8,12 @@ web-build/
 expo-env.d.ts
 
 # Native builds (generated; regenerate with prebuild / EAS)
-=======
-node_modules/
-.expo/
-dist/
-npm-debug.*
->>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
 *.orig.*
-<<<<<<< HEAD
 
 # Android local machine / build artifacts
 android/build/
@@ -40,7 +30,7 @@ ios/Podfile.lock
 # macOS
 .DS_Store
 
-# local env files
+# local env files (never commit secrets)
 .env
 .env*.local
 eas.env
@@ -71,10 +61,3 @@ build-log.txt
 build-log-decoded.txt
 build-meta.json
 deflate-out.txt
-=======
-web-build/
-.env
-.env.local
-.env.production
-*.tsbuildinfo
->>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0

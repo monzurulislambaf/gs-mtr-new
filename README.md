@@ -84,7 +84,7 @@ cp .env.example .env
 2. Enable **Email/Password** authentication
 3. Create a **Cloud Firestore** database
 4. Generate a web app config and copy the values
-5. Fill in your `.env` file:
+5. Fill in your gitignored `.env` file (copy `.env.example` first):
 
 ```env
 EXPO_PUBLIC_FIREBASE_API_KEY=your-api-key
@@ -93,6 +93,28 @@ EXPO_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
 EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
 EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
 EXPO_PUBLIC_FIREBASE_APP_ID=your-app-id
+```
+
+   The `.env` file is gitignored, so the Firebase config is never pushed to GitHub.
+
+6. For EAS builds, set the same variables as EAS environment variables (values live
+   on EAS servers, never in git). Run once per environment (`production`, `preview`, `development`):
+
+```bash
+eas env:set --name EXPO_PUBLIC_FIREBASE_API_KEY --value your-api-key --environment production --visibility plaintext
+# ... repeat for AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID
+```
+
+   Do **not** put Firebase values in `eas.json` — that file is committed to git. The
+   build profiles only reference the environment name (`"environment": "production"`).
+
+7. Deploy Firestore indexes and security rules:
+```bash
+# Install Firebase CLI
+npm install -g firebase-tools
+firebase login
+firebase init firestore
+firebase deploy --only firestore:indexes,firestore:rules
 ```
 
 6. Deploy Firestore indexes and security rules:
@@ -175,20 +197,26 @@ eas build --platform android --profile production
 
 ### Release Build with EAS
 
-Create `eas.json` in the project root:
+Create `eas.json` in the project root. Each profile references an EAS environment
+(the `EXPO_PUBLIC_FIREBASE_*` values are set as EAS environment variables, not committed):
 
 ```json
 {
-  "cli": { "version": ">= 3.0.0" },
+  "cli": { "version": ">= 21.3.0", "appVersionSource": "remote" },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "environment": "development"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "environment": "preview"
     },
-    "production": {}
+    "production": {
+      "autoIncrement": true,
+      "environment": "production"
+    }
   }
 }
 ```
