@@ -1,5 +1,12 @@
+import Constants from 'expo-constants';
+
 export const APP_NAME = 'GS MTR';
-export const APP_VERSION = '1.0.0';
+
+/**
+ * Version of the installed APK, read dynamically from the build manifest.
+ * Never hard-code this — it must always match the actual installed version.
+ */
+export const APP_VERSION = Constants.expoConfig?.version ?? '0.0.0';
 
 export const SYNC_INTERVAL = 30000;
 export const DEBOUNCE_DELAY = 150;

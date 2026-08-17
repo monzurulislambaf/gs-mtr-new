@@ -14,6 +14,8 @@ import { useContactsStore } from '@/store/contactsStore';
 import { initializeFirebase } from '@/firebase/config';
 import { initializeDatabase } from '@/database';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { UpdateRequiredScreen } from '@/components/UpdateRequiredScreen';
+import { useAppUpdate } from '@/hooks/useAppUpdate';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,6 +31,8 @@ export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
   const cleanupRef = useRef<(() => void)[]>([]);
+  // Mandatory APK update gate — offline users and failed checks always pass.
+  const update = useAppUpdate();
 
   useEffect(() => {
     let mounted = true;
@@ -89,6 +93,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!appReady || !authInitialized) return;
+    // While the mandatory update screen is shown, navigation is suspended.
+    if (update.updateRequired) return;
 
     const inAuthGroup = segments[0] === '(auth)';
     const inAdminGroup = segments[0] === 'admin';
@@ -116,23 +122,35 @@ export default function RootLayout() {
         <PaperProvider theme={paperTheme}>
           <SafeAreaProvider>
             <StatusBar style={isDark ? 'light' : 'dark'} />
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="admin" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="contact/[id]"
-                options={{ headerShown: true, title: 'Contact Details', presentation: 'card' }}
+            {update.updateRequired && update.info ? (
+              <UpdateRequiredScreen
+                info={update.info}
+                downloading={update.downloading}
+                installing={update.installing}
+                downloadProgress={update.downloadProgress}
+                error={update.error}
+                onUpdateNow={update.startDownload}
+                onRetry={update.recheck}
               />
-              <Stack.Screen
-                name="contact/add"
-                options={{ headerShown: true, title: 'Add Contact', presentation: 'modal' }}
-              />
-              <Stack.Screen
-                name="contact/edit/[id]"
-                options={{ headerShown: true, title: 'Edit Contact', presentation: 'modal' }}
-              />
-            </Stack>
+            ) : (
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(auth)" />
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="admin" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="contact/[id]"
+                  options={{ headerShown: true, title: 'Contact Details', presentation: 'card' }}
+                />
+                <Stack.Screen
+                  name="contact/add"
+                  options={{ headerShown: true, title: 'Add Contact', presentation: 'modal' }}
+                />
+                <Stack.Screen
+                  name="contact/edit/[id]"
+                  options={{ headerShown: true, title: 'Edit Contact', presentation: 'modal' }}
+                />
+              </Stack>
+            )}
           </SafeAreaProvider>
         </PaperProvider>
       </GestureHandlerRootView>
