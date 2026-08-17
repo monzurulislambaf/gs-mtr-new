@@ -24,7 +24,6 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "package": "com.gs.mtr",
-      "versionCode": 10,
       "permissions": [
         "android.permission.CALL_PHONE",
         "android.permission.INTERNET",
