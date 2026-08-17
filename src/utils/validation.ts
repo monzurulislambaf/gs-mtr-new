@@ -50,10 +50,12 @@ export function validateRegistration(
     errors.push({ field: 'fullName', message: 'Full Name must be at least 2 characters' });
   }
 
+  const numberLabel = data.category === 'Civilian' ? 'Service Number' : 'BD Number';
+
   if (!data.bdNumber.trim()) {
-    errors.push({ field: 'bdNumber', message: 'BD Number is required' });
+    errors.push({ field: 'bdNumber', message: `${numberLabel} is required` });
   } else if (!BD_NUMBER_REGEX.test(data.bdNumber.trim())) {
-    errors.push({ field: 'bdNumber', message: 'BD Number must be 4-10 digits' });
+    errors.push({ field: 'bdNumber', message: `${numberLabel} must be 4-10 digits` });
   }
 
   if (!data.rank.trim()) {

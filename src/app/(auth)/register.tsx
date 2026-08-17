@@ -183,7 +183,7 @@ export default function RegisterScreen() {
             />
 
             <TextInput
-              label="BD Number *"
+              label={form.category === 'Civilian' ? 'Service Number *' : 'BD Number *'}
               value={form.bdNumber}
               onChangeText={(t) => updateField('bdNumber', t.replace(/[^\d]/g, ''))}
               mode="outlined"

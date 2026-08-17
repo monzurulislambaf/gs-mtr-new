@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { View, StyleSheet, Pressable, Platform } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { TextInput, Text, useTheme } from 'react-native-paper';
-import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { DatePickerModal } from 'react-native-paper-dates';
 
 export function toDateString(date: Date): string {
   const y = date.getFullYear();
@@ -30,28 +30,11 @@ export function DateField({
   placeholder,
 }: DateFieldProps) {
   const theme = useTheme();
-  const [showPicker, setShowPicker] = useState(false);
-
-  function openPicker() {
-    if (Platform.OS === 'android') {
-      DateTimePickerAndroid.open({
-        value: value ? new Date(`${value}T00:00:00`) : new Date(2000, 0, 1),
-        mode: 'date',
-        maximumDate,
-        onChange: (event, date) => {
-          if (event.type === 'set' && date) {
-            onChange(toDateString(date));
-          }
-        },
-      });
-    } else {
-      setShowPicker(true);
-    }
-  }
+  const [visible, setVisible] = useState(false);
 
   return (
     <View style={styles.wrapper}>
-      <Pressable onPress={openPicker}>
+      <Pressable onPress={() => setVisible(true)}>
         <View pointerEvents="none">
           <TextInput
             label={label}
@@ -70,20 +53,21 @@ export function DateField({
           {helperText}
         </Text>
       ) : null}
-      {showPicker && (
-        <DateTimePicker
-          value={value ? new Date(`${value}T00:00:00`) : new Date(2000, 0, 1)}
-          mode="date"
-          maximumDate={maximumDate}
-          display="spinner"
-          onChange={(event, date) => {
-            setShowPicker(false);
-            if (event.type === 'set' && date) {
-              onChange(toDateString(date));
-            }
-          }}
-        />
-      )}
+      <DatePickerModal
+        locale="en"
+        mode="single"
+        visible={visible}
+        date={value ? new Date(`${value}T00:00:00`) : undefined}
+        validRange={{ startDate: new Date(1950, 0, 1), endDate: maximumDate }}
+        onDismiss={() => setVisible(false)}
+        onConfirm={({ date }) => {
+          setVisible(false);
+          if (date) {
+            onChange(toDateString(date));
+          }
+        }}
+        saveLabel="OK"
+      />
     </View>
   );
 }

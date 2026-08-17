@@ -1,5 +1,14 @@
-import { View, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { TextInput, Text, useTheme } from 'react-native-paper';
+import { DatePickerModal } from 'react-native-paper-dates';
+
+export function toDateString(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
 
 interface DateFieldProps {
   label: string;
@@ -8,6 +17,7 @@ interface DateFieldProps {
   error?: boolean;
   helperText?: string;
   maximumDate?: Date;
+  placeholder?: string;
 }
 
 export function DateField({
@@ -16,24 +26,48 @@ export function DateField({
   onChange,
   error,
   helperText,
+  maximumDate,
+  placeholder,
 }: DateFieldProps) {
   const theme = useTheme();
+  const [visible, setVisible] = useState(false);
+
   return (
     <View style={styles.wrapper}>
-      <TextInput
-        label={label}
-        value={value}
-        mode="outlined"
-        placeholder="YYYY-MM-DD"
-        onChangeText={onChange}
-        error={error}
-        style={styles.input}
-      />
+      <Pressable onPress={() => setVisible(true)}>
+        <View pointerEvents="none">
+          <TextInput
+            label={label}
+            value={value}
+            mode="outlined"
+            editable={false}
+            placeholder={placeholder || 'Select date'}
+            error={error}
+            style={styles.input}
+            right={<TextInput.Icon icon="calendar" />}
+          />
+        </View>
+      </Pressable>
       {helperText && error ? (
         <Text variant="bodySmall" style={{ color: theme.colors.error, marginLeft: 12, marginTop: 2 }}>
           {helperText}
         </Text>
       ) : null}
+      <DatePickerModal
+        locale="en"
+        mode="single"
+        visible={visible}
+        date={value ? new Date(`${value}T00:00:00`) : undefined}
+        validRange={{ startDate: new Date(1950, 0, 1), endDate: maximumDate }}
+        onDismiss={() => setVisible(false)}
+        onConfirm={({ date }) => {
+          setVisible(false);
+          if (date) {
+            onChange(toDateString(date));
+          }
+        }}
+        saveLabel="OK"
+      />
     </View>
   );
 }

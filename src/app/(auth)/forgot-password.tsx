@@ -73,7 +73,7 @@ export default function ForgotPasswordScreen() {
           >
             <Text variant="bodyMedium" style={[styles.hint, { color: theme.colors.onSurfaceVariant }]}>
               Enter your registered email address or BD Number. We will send you a password
-              reset link by email.
+              reset link by email. Check your email inbox or spam folder.
             </Text>
 
             <TextInput
@@ -91,8 +91,8 @@ export default function ForgotPasswordScreen() {
 
             {sent ? (
               <HelperText type="info" visible={true}>
-                Password reset email sent. Check your inbox and follow the link to reset
-                your password.
+                Password reset email sent. Check your email inbox or spam folder and follow
+                the link to reset your password.
               </HelperText>
             ) : null}
 
