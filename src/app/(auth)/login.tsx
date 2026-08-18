@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import {
   Text,
   TextInput,
@@ -15,11 +15,14 @@ import { useAuthStore } from '@/store/authStore';
 import { APP_NAME } from '@/utils/constants';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 import { AuthHeader } from '@/components/auth/AuthHeader';
+import { KeyboardAwareScreen, useKeyboardAwareForm } from '@/components/ui/KeyboardAwareScreen';
 
 const REMEMBER_KEY = 'gs_mtr_remember_me';
 
 export default function LoginScreen() {
   const theme = useTheme();
+  const keyboardForm = useKeyboardAwareForm();
+  const { captureLayout, focusField } = keyboardForm;
   const login = useAuthStore((s) => s.login);
   const [bdNumber, setBdNumber] = useState('');
   const [password, setPassword] = useState('');
@@ -60,12 +63,8 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
-      >
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-          <AuthHeader title={APP_NAME} subtitle="Office Contact Directory" />
+      <KeyboardAwareScreen form={keyboardForm} contentContainerStyle={styles.scroll}>
+        <AuthHeader title={APP_NAME} subtitle="Office Contact Directory" />
 
           <View              style={[
                 styles.card,
@@ -86,6 +85,8 @@ export default function LoginScreen() {
               label="BD Number"
               value={bdNumber}
               onChangeText={(t) => { setBdNumber(t); setError(''); }}
+              onFocus={() => focusField('bdNumber')}
+              onLayout={captureLayout('bdNumber')}
               mode="outlined"
               keyboardType="number-pad"
               autoCapitalize="none"
@@ -97,6 +98,8 @@ export default function LoginScreen() {
               label="Password"
               value={password}
               onChangeText={(t) => { setPassword(t); setError(''); }}
+              onFocus={() => focusField('password')}
+              onLayout={captureLayout('password')}
               mode="outlined"
               placeholder="Enter your password"
               secureTextEntry={!showPassword}
@@ -169,8 +172,7 @@ export default function LoginScreen() {
           <Text variant="bodySmall" style={[styles.footer, { color: theme.colors.onSurfaceVariant }]}>
             {APP_NAME} · Office Contact Directory
           </Text>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

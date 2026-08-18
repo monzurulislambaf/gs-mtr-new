@@ -1,4 +1,4 @@
-# PABX-MTR
+# GS MTR
 
 A production-ready Android office contact directory application built with Expo SDK 57, React Native, and Firebase. Designed to look and behave like Google Contacts.
 
@@ -16,6 +16,8 @@ A production-ready Android office contact directory application built with Expo 
 - **Alphabet Index** — Fast scroll sidebar for large contact lists
 - **Phone Actions** — Call, copy, share contact details
 - **Pull to Refresh** — Refresh the contact list
+- **Keyboard-Aware Forms** — Focused inputs auto-scroll above the keyboard on Android and iOS
+- **Online APK Updates** — Mandatory in-app update flow via Firebase + GitHub Releases
 
 ## Technology Stack
 
@@ -35,6 +37,17 @@ A production-ready Android office contact directory application built with Expo 
 | Secure Storage | Expo Secure Store |
 | Icons | @expo/vector-icons |
 
+## Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm start` | Start Expo dev server |
+| `npm run android` | Run on Android |
+| `npm run ios` | Run on iOS (macOS only) |
+| `npm run web` | Run on web |
+| `npm run lint` | Run ESLint (`expo lint`) |
+| `npx tsc --noEmit` | Type check |
+
 ## Project Structure
 
 ```
@@ -44,7 +57,7 @@ src/
     (auth)/               # Auth group (login)
     (tabs)/               # Tab navigator (contacts, search, settings)
     contact/              # Contact CRUD screens
-  components/ui/           # Reusable components
+  components/ui/          # Reusable components
   database/               # SQLite database + sync engine
   firebase/               # Firebase config + services
   hooks/                  # Custom hooks
@@ -69,7 +82,7 @@ src/
 
 ```bash
 # Navigate to the project
-cd MyApp
+cd gs-mtr
 
 # Install dependencies
 npm install
@@ -109,6 +122,7 @@ eas env:set --name EXPO_PUBLIC_FIREBASE_API_KEY --value your-api-key --environme
    build profiles only reference the environment name (`"environment": "production"`).
 
 7. Deploy Firestore indexes and security rules:
+
 ```bash
 # Install Firebase CLI
 npm install -g firebase-tools
@@ -117,12 +131,9 @@ firebase init firestore
 firebase deploy --only firestore:indexes,firestore:rules
 ```
 
-6. Deploy Firestore indexes and security rules:
+Deploy the rules and indexes after any change:
+
 ```bash
-# Install Firebase CLI
-npm install -g firebase-tools
-firebase login
-firebase init firestore
 firebase deploy --only firestore:indexes,firestore:rules
 ```
 
@@ -147,11 +158,6 @@ decline registrations with an optional reason.
 - **User Management** lets admins view all users, suspend/reactivate accounts, and (for
 super admins) manage admin roles.
 - Approved users keep offline access through a locally cached session.
-
-Deploy the rules and indexes after any change:
-```bash
-firebase deploy --only firestore:indexes,firestore:rules
-```
 
 ### Running the App
 
@@ -195,36 +201,212 @@ eas login
 eas build --platform android --profile production
 ```
 
-### Release Build with EAS
+### EAS Build Profiles
 
-Create `eas.json` in the project root. Each profile references an EAS environment
-(the `EXPO_PUBLIC_FIREBASE_*` values are set as EAS environment variables, not committed):
+`eas.json` uses remote version management (`"appVersionSource": "remote"`) so EAS
+increments the Android `versionCode` automatically on every production build. The
+Firebase `EXPO_PUBLIC_FIREBASE_*` values are set as EAS environment variables, not committed:
 
 ```json
 {
-  "cli": { "version": ">= 21.3.0", "appVersionSource": "remote" },
+  "cli": { "version": ">=21.3.0", "appVersionSource": "remote" },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "environment": "development"
-    },
-    "preview": {
-      "distribution": "internal",
-      "environment": "preview"
-    },
-    "production": {
-      "autoIncrement": true,
-      "environment": "production"
-    }
-  }
+    "development": { "developmentClient": true, "distribution": "internal", "environment": "development" },
+    "preview": { "distribution": "internal", "environment": "preview" },
+    "production": { "autoIncrement": true, "environment": "production" },
+    "production-apk": { "distribution": "internal", "environment": "production", "android": { "buildType": "apk" } }
+  },
+  "submit": { "production": {} }
 }
 ```
 
-Then build:
-```bash
-eas build --platform android --profile production
+## Releasing Updates (Online APK Update System)
+
+GS MTR ships with a **one-time, online mandatory APK update system**. The update
+logic lives in the app itself (`src/services/appUpdateService.ts`,
+`src/hooks/useAppUpdate.ts`, `src/components/UpdateRequiredScreen.tsx`) and is
+configured through **Firebase** + **GitHub Releases**.
+
+After the initial setup you never touch update code again. Every new release is
+just: bump the version → build an APK → create a GitHub Release → update the
+Firebase config.
+
+### How it works (summary)
+
+| Step | Where |
+|------|-------|
+| Installed version | Read from the APK itself via `expo-constants` — never a stored flag |
+| Release configuration | Firestore document `appConfig/android` (public read, admin write) |
+| Mandatory minimum | `minimumVersion` — below it the app shows the Update screen |
+| Latest release info | `latestVersion`, `apkUrl`, `releaseNotes`, `versionCode` |
+| APK hosting | GitHub Releases (direct download URL stored in Firebase) |
+| Offline behavior | No internet → the offline-first app opens normally, never blocked |
+| Download + install | `expo-file-system` download with progress → Android package installer via `expo-intent-launcher` |
+
+The check runs at startup **after the UI is ready and never blocks the app**.
+Offline users, malformed configs and failed checks all fail open to the normal
+offline-first app.
+
+### The Firebase configuration
+
+The app reads a single Firestore document — the **release config**:
+
 ```
+appConfig/android
+```
+
+#### First-time setup — create the release data
+
+The collection is created the first time its document is written. Do this once:
+
+1. Deploy the security rules first (they grant public read + admin write):
+
+   ```bash
+   firebase deploy --only firestore:rules
+   ```
+
+2. Open the **Firebase console → Firestore Database → Data**.
+3. Click **Start collection** → Collection ID: `appConfig`.
+4. Click **Add document** → Document ID: `android`.
+5. Add the five fields (seed values are in `firebase-seed/release-config.json`):
+
+   | Field | Type | Value |
+   |-------|------|-------|
+   | `latestVersion` | string | `1.0.0` |
+   | `minimumVersion` | string | `1.0.0` |
+   | `apkUrl` | string | your GitHub Releases APK URL |
+   | `versionCode` | number | `10` |
+   | `releaseNotes` | string | `Initial production release.` |
+
+6. Save. The app fetches this document on every startup (online) and compares
+   it against the installed version.
+
+**Or seed it automatically** with `scripts/seed-release-data.mjs` (values come
+from `firebase-seed/release-config.json`, overridable per field):
+
+```bash
+# Local Firestore emulator (no credentials, great for testing)
+firebase emulators:exec "node scripts/seed-release-data.mjs" --only firestore
+
+# Real Firebase project (needs a gitignored service account JSON)
+FIREBASE_SERVICE_ACCOUNT=/path/to/key.json node scripts/seed-release-data.mjs
+
+# Inspect the current document without writing
+node scripts/seed-release-data.mjs --check
+```
+
+Example document:
+
+```json
+{
+  "latestVersion": "1.1.0",
+  "minimumVersion": "1.1.0",
+  "apkUrl": "https://github.com/YOUR_USERNAME/gs-mtr/releases/download/v1.1.0/GS-MTR-v1.1.0.apk",
+  "versionCode": 11,
+  "releaseNotes": "Bug fixes\nPerformance improvements"
+}
+```
+
+| Field | Purpose |
+|-------|---------|
+| `latestVersion` | The newest published release (display/notes). |
+| `minimumVersion` | **Mandatory floor.** Installed < minimum → Update Required. |
+| `apkUrl` | Direct GitHub Releases download URL. **Always read from Firebase — never hard-coded.** |
+| `versionCode` | Android build code of the release (informational). |
+| `releaseNotes` | Shown on the Update screen, one bullet per line. |
+
+You can set `minimumVersion` lower than `latestVersion` to let some users keep
+running an older APK (e.g. `latestVersion = 1.3.0`, `minimumVersion = 1.2.0`).
+When the update must become mandatory, set `minimumVersion` equal to
+`latestVersion`.
+
+Security rules (already in `firestore.rules`): `appConfig` is publicly readable
+(the check runs before login) but only admins can write it.
+
+### Release checklist (example: version 1.1.0)
+
+1. **Change the version** in `app.json`. **Do not reuse a version.**
+
+   ```json
+   { "expo": { "version": "1.1.0" } }
+   ```
+
+   About `versionCode`: EAS remote version management increments the Android
+   `versionCode` automatically on every production build — you never reuse one
+   and never edit it by hand. The convention is `1.0.0 → 10`, `1.1.0 → 11`,
+   `1.2.0 → 12`, … To inspect the current remote value: `eas build:version:get`.
+
+   > If you prefer fully manual versioning, set `"appVersionSource": "local"` in
+   > `eas.json`, remove `autoIncrement`, and bump `android.versionCode` in
+   > `app.json` yourself each release (11, 12, 13, …). Never go backwards — Android
+   > refuses to install an APK whose `versionCode` is not higher than the
+   > installed one.
+
+2. **Build the APK.**
+
+   ```bash
+   eas build --platform android --profile production-apk
+   ```
+
+   The `production-apk` profile produces a signed, installable APK with the
+   **same package name (`com.gs.mtr`) and same signing credentials** as the
+   production build — that is what lets Android treat it as an in-place upgrade
+   (app data, SQLite and session are preserved; GS MTR is never uninstalled).
+
+3. **Create the GitHub Release.**
+   - Go to `https://github.com/YOUR_USERNAME/gs-mtr/releases/new`
+   - Tag: `v1.1.0`
+   - Title: `GS MTR v1.1.0`
+   - Attach the APK file from the EAS build (download it from the build page).
+
+4. **Copy the direct APK URL** — it follows this pattern (use the asset filename you uploaded):
+
+   ```
+   https://github.com/YOUR_USERNAME/gs-mtr/releases/download/v1.1.0/GS-MTR-v1.1.0.apk
+   ```
+
+5. **Update Firebase** — edit the existing `appConfig/android` document with the
+   new values. The app reads this document directly from Firestore at startup,
+   so the APK URL always comes from the database, never from the app code:
+
+   ```json
+   {
+     "latestVersion": "1.1.0",
+     "minimumVersion": "1.1.0",
+     "apkUrl": "https://github.com/YOUR_USERNAME/gs-mtr/releases/download/v1.1.0/GS-MTR-v1.1.0.apk",
+     "versionCode": 11,
+     "releaseNotes": "Bug fixes\nPerformance improvements"
+   }
+   ```
+
+6. **Test the update** — install the previous APK on a device, then:
+   - **Online:** open GS MTR → Update Required → UPDATE NOW → progress bar → APK
+     downloads → Android installer → install → new APK opens with **no update prompt**.
+   - **Offline (airplane mode):** open GS MTR → the offline app opens normally,
+     contacts searchable, no update prompt, never blocked.
+
+### Testing scenarios
+
+| # | Installed | Internet | Firebase minimum | Expected |
+|---|-----------|----------|------------------|----------|
+| A | 1.0.0 | OFF | 1.1.0 | Open offline app |
+| B | 1.0.0 | ON | 1.1.0 | Update Required |
+| C | 1.1.0 | ON | 1.1.0 | Open app |
+| D | 1.2.0 | ON | 1.1.0 | Open app |
+| E | Install new APK | — | — | Old update prompt disappears |
+| F | Broken Firebase config | ON | — | App opens, does not crash |
+| G | APK download fails | ON | — | RETRY button shown |
+
+### Update system notes / constraints
+
+- The **installed APK version is the source of truth**. The app never stores an
+  "updated" flag, so the prompt reappears until the version really is updated.
+- Do **not** hard-code the APK URL; always read `apkUrl` from Firebase.
+- Keep the same Android **package name** and **signing credentials** for every
+  release, or Android will treat the APK as a different app.
+- The update system is Android-only; on iOS/web/Expo Go the check is skipped.
+- Update code is isolated and fails open — a Firebase or download failure can
+  never crash or lock the app.
 
 ## Architecture Highlights
 
@@ -237,6 +419,20 @@ eas build --platform android --profile production
 5. **Soft deletes**: Contacts marked as `deleted: true` rather than removed
 
 All sync operations are fully automatic — there are no manual sync, auto-sync toggle, or cache-clear controls in Settings. When the device reconnects, pending changes are synced transparently, without any offline notification banner.
+
+### Keyboard-Aware Forms
+
+All form screens (Registration, Login, Forgot Password, Create/Edit Contact) use a
+single reusable `KeyboardAwareScreen` component
+(`src/components/ui/KeyboardAwareScreen.tsx`) that:
+
+- Wraps forms in a `KeyboardAvoidingView` (iOS `padding` only) + `ScrollView` with
+  `keyboardShouldPersistTaps="handled"`.
+- On focus, measures the input and the real keyboard height and scrolls the field
+  above the keyboard on Android (edge-to-edge) and iOS.
+- Re-aligns the focused field once the keyboard is fully shown, so the Register /
+  Save button stays reachable with the keyboard open.
+- Uses `useKeyboardAwareForm()` to wire each input's `onFocus` / `onLayout`.
 
 ### Performance for 50,000+ Contacts
 

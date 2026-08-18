@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { resetPassword } from '@/firebase/auth';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 import { AuthHeader } from '@/components/auth/AuthHeader';
+import { KeyboardAwareScreen, useKeyboardAwareForm } from '@/components/ui/KeyboardAwareScreen';
 
 export default function ForgotPasswordScreen() {
   const theme = useTheme();
+  const keyboardForm = useKeyboardAwareForm();
+  const { captureLayout, focusField } = keyboardForm;
   const [identifier, setIdentifier] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,18 +36,14 @@ export default function ForgotPasswordScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flex}
-      >
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-          <AuthHeader
-            compact
-            showBack
-            icon="key"
-            title="Forgot Password"
-            subtitle="Reset your password"
-          />
+      <KeyboardAwareScreen form={keyboardForm} contentContainerStyle={styles.scroll}>
+        <AuthHeader
+          compact
+          showBack
+          icon="key"
+          title="Forgot Password"
+          subtitle="Reset your password"
+        />
 
           <View
             style={[
@@ -64,6 +63,8 @@ export default function ForgotPasswordScreen() {
               label="Email or BD Number"
               value={identifier}
               onChangeText={(t) => { setIdentifier(t); setError(''); setSent(false); }}
+              onFocus={() => focusField('identifier')}
+              onLayout={captureLayout('identifier')}
               mode="outlined"
               placeholder="e.g. john@example.com or 10498"
               autoCapitalize="none"
@@ -101,8 +102,7 @@ export default function ForgotPasswordScreen() {
               Back to Sign In
             </Button>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

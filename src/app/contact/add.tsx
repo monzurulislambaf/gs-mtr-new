@@ -1,7 +1,6 @@
-import { useState, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import {
-  Text,
   TextInput,
   Button,
   HelperText,
@@ -15,8 +14,7 @@ import { createNewContact } from '@/services/contactService';
 import { validateContact } from '@/utils/validation';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 import { useContactsStore } from '@/store/contactsStore';
-import { CONTACT_FIELDS } from '@/utils/constants';
-import { useScrollToFocusedField } from '@/hooks/useScrollToFocusedField';
+import { KeyboardAwareScreen, useKeyboardAwareForm } from '@/components/ui/KeyboardAwareScreen';
 
 interface FormData {
   'BD NO': string;
@@ -36,7 +34,8 @@ interface FormData {
 export default function AddContactScreen() {
   const theme = useTheme();
   const loadContacts = useContactsStore((s) => s.loadContacts);
-  const { scrollRef, captureLayout, focusField } = useScrollToFocusedField();
+  const keyboardForm = useKeyboardAwareForm();
+  const { captureLayout, focusField } = keyboardForm;
   const [form, setForm] = useState<FormData>({
     'BD NO': '', RANK: '', NAME: '', DESIGNATION: '',
     'BRANCH / TRADE': '', 'OFFICE ADDRESS': '', 'RESIDENCE ADDRESS': '',
@@ -86,17 +85,9 @@ export default function AddContactScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flex}
-      >
-        <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
-        >
-          <TextInput
-            label="BD NO"
+      <KeyboardAwareScreen form={keyboardForm} contentContainerStyle={styles.scroll}>
+        <TextInput
+          label="BD NO"
             value={form['BD NO']}
             onChangeText={(t) => updateField('BD NO', t)}
             onFocus={() => focusField('BD NO')}
@@ -245,8 +236,7 @@ export default function AddContactScreen() {
           >
             Save Contact
           </Button>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScreen>
 
       <Portal>
         <Snackbar

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   Text,
   TextInput,
@@ -15,9 +15,8 @@ import { editContact } from '@/services/contactService';
 import { validateContact } from '@/utils/validation';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 import { useContactsStore } from '@/store/contactsStore';
-import { Contact } from '@/types/contact';
 import * as db from '@/database/database';
-import { useScrollToFocusedField } from '@/hooks/useScrollToFocusedField';
+import { KeyboardAwareScreen, useKeyboardAwareForm } from '@/components/ui/KeyboardAwareScreen';
 
 interface FormData {
   'BD NO': string;
@@ -38,7 +37,8 @@ export default function EditContactScreen() {
   const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const loadContacts = useContactsStore((s) => s.loadContacts);
-  const { scrollRef, captureLayout, focusField } = useScrollToFocusedField();
+  const keyboardForm = useKeyboardAwareForm();
+  const { captureLayout, focusField } = keyboardForm;
   const [form, setForm] = useState<FormData | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -111,16 +111,8 @@ export default function EditContactScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flex}
-      >
-        <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
-        >
-          <TextInput label="BD NO" value={form['BD NO']} onChangeText={(t) => updateField('BD NO', t)} onFocus={() => focusField('BD NO')} onLayout={captureLayout('BD NO')} mode="outlined" style={styles.input} error={!!errors['BD NO']} />
+      <KeyboardAwareScreen form={keyboardForm} contentContainerStyle={styles.scroll}>
+        <TextInput label="BD NO" value={form['BD NO']} onChangeText={(t) => updateField('BD NO', t)} onFocus={() => focusField('BD NO')} onLayout={captureLayout('BD NO')} mode="outlined" style={styles.input} error={!!errors['BD NO']} />
           {errors['BD NO'] && <HelperText type="error">{errors['BD NO']}</HelperText>}
           <TextInput label="RANK" value={form.RANK} onChangeText={(t) => updateField('RANK', t)} onFocus={() => focusField('RANK')} onLayout={captureLayout('RANK')} mode="outlined" style={styles.input} error={!!errors.RANK} />
           {errors.RANK && <HelperText type="error">{errors.RANK}</HelperText>}
@@ -142,8 +134,7 @@ export default function EditContactScreen() {
           <Button mode="contained" onPress={handleSave} loading={loading} disabled={loading} style={styles.saveButton} contentStyle={styles.saveButtonContent}>
             Update Contact
           </Button>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScreen>
       <Portal>
         <Snackbar visible={snackbar.visible} onDismiss={() => setSnackbar({ ...snackbar, visible: false })} duration={3000}>
           {snackbar.message}

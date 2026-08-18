@@ -1,12 +1,8 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   Pressable,
-  type LayoutChangeEvent,
 } from 'react-native';
 import {
   Text,
@@ -27,6 +23,7 @@ import { validateRegistration, ValidationError } from '@/utils/validation';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 import { DateField } from '@/components/ui/DateField';
 import { AuthHeader } from '@/components/auth/AuthHeader';
+import { KeyboardAwareScreen, useKeyboardAwareForm } from '@/components/ui/KeyboardAwareScreen';
 import { CATEGORY_LABELS, UserCategory } from '@/types/auth';
 
 interface FormState {
@@ -77,6 +74,8 @@ function SectionTitle({ title }: { title: string }) {
 
 export default function RegisterScreen() {
   const theme = useTheme();
+  const keyboardForm = useKeyboardAwareForm();
+  const { captureLayout, focusField, setBaseOffset } = keyboardForm;
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -84,26 +83,6 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [successVisible, setSuccessVisible] = useState(false);
   const [snackbar, setSnackbar] = useState({ visible: false, message: '' });
-
-  // Auto-scroll the focused field above the keyboard. With Android
-  // edge-to-edge the native auto-scroll does not always kick in, so we scroll
-  // explicitly on focus using the field's offset relative to the form card
-  // (cardY + fieldY = offset from the top of the ScrollView content).
-  const scrollRef = useRef<ScrollView>(null);
-  const layoutRef = useRef({ cardY: 0, fields: {} as Record<string, number> });
-
-  function captureLayout(field: string) {
-    return (e: LayoutChangeEvent) => {
-      layoutRef.current.fields[field] = e.nativeEvent.layout.y;
-    };
-  }
-
-  function handleFocus(field: string) {
-    const { cardY, fields } = layoutRef.current;
-    const y = fields[field];
-    if (y == null) return;
-    scrollRef.current?.scrollTo({ y: Math.max(0, cardY + y - 96), animated: true });
-  }
 
   function showSnackbar(message: string) {
     setSnackbar({ visible: true, message });
@@ -162,27 +141,19 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flex}
-      >
-        <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
-        >
-          <AuthHeader
-            compact
-            showBack
-            icon="create"
-            title="Request Registration"
-            subtitle="Join the GS MTR directory"
-          />
+      <KeyboardAwareScreen form={keyboardForm} contentContainerStyle={styles.scroll}>
+        <AuthHeader
+          compact
+          showBack
+          icon="create"
+          title="Request Registration"
+          subtitle="Join the GS MTR directory"
+        />
 
-          <View
-            onLayout={(e) => {
-              layoutRef.current.cardY = e.nativeEvent.layout.y;
-            }}
+        <View
+          onLayout={(e) => {
+            setBaseOffset(e.nativeEvent.layout.y);
+          }}
             style={[
               styles.card,
               {
@@ -197,7 +168,7 @@ export default function RegisterScreen() {
               label="Full Name *"
               value={form.fullName}
               onChangeText={(t) => updateField('fullName', t)}
-              onFocus={() => handleFocus('fullName')}
+              onFocus={() => focusField('fullName')}
               onLayout={captureLayout('fullName')}
               mode="outlined"
               style={styles.input}
@@ -224,7 +195,7 @@ export default function RegisterScreen() {
               label={form.category === 'Civilian' ? 'Service Number *' : 'BD Number *'}
               value={form.bdNumber}
               onChangeText={(t) => updateField('bdNumber', t.replace(/[^\d]/g, ''))}
-              onFocus={() => handleFocus('bdNumber')}
+              onFocus={() => focusField('bdNumber')}
               onLayout={captureLayout('bdNumber')}
               mode="outlined"
               keyboardType="number-pad"
@@ -255,7 +226,7 @@ export default function RegisterScreen() {
               label="Rank *"
               value={form.rank}
               onChangeText={(t) => updateField('rank', t)}
-              onFocus={() => handleFocus('rank')}
+              onFocus={() => focusField('rank')}
               onLayout={captureLayout('rank')}
               mode="outlined"
               style={styles.input}
@@ -268,7 +239,7 @@ export default function RegisterScreen() {
               label={`${CATEGORY_LABELS[form.category].branch} *`}
               value={form.branch}
               onChangeText={(t) => updateField('branch', t)}
-              onFocus={() => handleFocus('branch')}
+              onFocus={() => focusField('branch')}
               onLayout={captureLayout('branch')}
               mode="outlined"
               placeholder={form.category === 'Airman' ? 'e.g. GS' : undefined}
@@ -283,7 +254,7 @@ export default function RegisterScreen() {
                 label={form.category === 'Airman' ? 'Entry' : 'Course'}
                 value={form.course}
                 onChangeText={(t) => updateField('course', t)}
-                onFocus={() => handleFocus('course')}
+                onFocus={() => focusField('course')}
                 onLayout={captureLayout('course')}
                 mode="outlined"
                 placeholder={form.category === 'Airman' ? 'e.g. 40' : 'e.g. DE2022B'}
@@ -306,7 +277,7 @@ export default function RegisterScreen() {
               label="Designation"
               value={form.designation}
               onChangeText={(t) => updateField('designation', t)}
-              onFocus={() => handleFocus('designation')}
+              onFocus={() => focusField('designation')}
               onLayout={captureLayout('designation')}
               mode="outlined"
               style={styles.input}
@@ -317,7 +288,7 @@ export default function RegisterScreen() {
               label="Office/Unit"
               value={form.office}
               onChangeText={(t) => updateField('office', t)}
-              onFocus={() => handleFocus('office')}
+              onFocus={() => focusField('office')}
               onLayout={captureLayout('office')}
               mode="outlined"
               style={styles.input}
@@ -330,7 +301,7 @@ export default function RegisterScreen() {
               label="Email *"
               value={form.email}
               onChangeText={(t) => updateField('email', t)}
-              onFocus={() => handleFocus('email')}
+              onFocus={() => focusField('email')}
               onLayout={captureLayout('email')}
               mode="outlined"
               keyboardType="email-address"
@@ -346,7 +317,7 @@ export default function RegisterScreen() {
               label="Mobile Number *"
               value={form.mobile}
               onChangeText={(t) => updateField('mobile', t)}
-              onFocus={() => handleFocus('mobile')}
+              onFocus={() => focusField('mobile')}
               onLayout={captureLayout('mobile')}
               mode="outlined"
               keyboardType="phone-pad"
@@ -362,7 +333,7 @@ export default function RegisterScreen() {
               label="Password *"
               value={form.password}
               onChangeText={(t) => updateField('password', t)}
-              onFocus={() => handleFocus('password')}
+              onFocus={() => focusField('password')}
               onLayout={captureLayout('password')}
               mode="outlined"
               secureTextEntry={!showPassword}
@@ -383,7 +354,7 @@ export default function RegisterScreen() {
               label="Confirm Password *"
               value={form.confirmPassword}
               onChangeText={(t) => updateField('confirmPassword', t)}
-              onFocus={() => handleFocus('confirmPassword')}
+              onFocus={() => focusField('confirmPassword')}
               onLayout={captureLayout('confirmPassword')}
               mode="outlined"
               secureTextEntry={!showConfirmPassword}
@@ -420,34 +391,33 @@ export default function RegisterScreen() {
               GS MTR contacts after your registration is approved.
             </Text>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScreen>
 
-      <Portal>
-        <Dialog visible={successVisible} onDismiss={() => router.replace('/(auth)/account-status' as any)}>
-          <Dialog.Title>Registration Submitted</Dialog.Title>
-          <Dialog.Content>
-            <Text>
-              Your registration is pending admin approval. You will get access to GS MTR
-              contacts once an administrator approves your request.
-            </Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => router.replace('/(auth)/account-status' as any)}>
-              OK
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
+        <Portal>
+          <Dialog visible={successVisible} onDismiss={() => router.replace('/(auth)/account-status' as any)}>
+            <Dialog.Title>Registration Submitted</Dialog.Title>
+            <Dialog.Content>
+              <Text>
+                Your registration is pending admin approval. You will get access to GS MTR
+                contacts once an administrator approves your request.
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => router.replace('/(auth)/account-status' as any)}>
+                OK
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
 
-        <Snackbar
-          visible={snackbar.visible}
-          onDismiss={() => setSnackbar({ ...snackbar, visible: false })}
-          duration={3000}
-        >
-          {snackbar.message}
-        </Snackbar>
-      </Portal>
-    </SafeAreaView>
+          <Snackbar
+            visible={snackbar.visible}
+            onDismiss={() => setSnackbar({ ...snackbar, visible: false })}
+            duration={3000}
+          >
+            {snackbar.message}
+          </Snackbar>
+        </Portal>
+      </SafeAreaView>
   );
 }
 
