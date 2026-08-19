@@ -4,20 +4,51 @@ A production-ready Android office contact directory application built with Expo 
 
 ## Features
 
-- **Fast Search** — Real-time offline search across all contact fields with partial matching
-- **Offline First** — Contacts stored locally in SQLite; works instantly without internet
+### Contact Management
+- **CRUD Operations** — Create, edit, delete (soft), and restore contacts
+- **Offline First** — Contacts stored locally in SQLite with WAL mode; works instantly without internet
 - **Automatic Sync** — Incremental and realtime sync run automatically; no manual triggers
-- **Realtime Updates** — Firestore listeners keep local data in sync automatically
-- **Material Design 3** — Google Contacts-like UI with light/dark/system theme support
-- **Role-Based Access** — Admins can CRUD; users can view and search
-- **CRUD Operations** — Create, edit, delete, and restore contacts
-- **CSV Import/Export** — Bulk import and export contacts (admin only)
-- **Favorites & Recents** — Mark favorite contacts and view recently accessed
+- **Realtime Updates** — Firestore `onSnapshot` listeners keep local data in sync automatically
+- **Favorites** — Mark contacts as favorites with the star icon for quick access
+- **Duplicate Detection** — BD NO uniqueness enforced at both client and server level
+- **Batch Selection** — Long-press to select multiple contacts for batch delete or restore
+- **Share Contact** — Share contact details as a text file via the system share sheet
+
+### Search
+- **Fast Search** — Real-time offline search across all contact fields with partial matching
+- **Search Filters** — Toggle specific fields to narrow search results (Name, Rank, BD No, Mobile, etc.)
+- **Search History** — Recent searches saved locally for quick re-access
 - **Alphabet Index** — Fast scroll sidebar for large contact lists
-- **Phone Actions** — Call, copy, share contact details
-- **Pull to Refresh** — Refresh the contact list
+
+### Authentication & Access Control
+- **BD Number Login** — Sign in with your BD Number + password (mapped securely via Firebase)
+- **Self Registration** — Multi-category registration (Officer / Airman / Civilian) with admin approval workflow
+- **Role-Based Access** — Admins can CRUD contacts; approved users can view and search
+- **Account Status** — Pending / Approved / Declined / Suspended states with status checking
+- **Remember Me** — Persistent session via AsyncStorage; approved users keep offline access
+- **Forgot Password** — Password reset via Firebase Auth (accepts BD Number or email)
+- **Session Caching** — Locally cached session so approved users retain offline contact access
+
+### Admin Features
+- **Pending Approvals** — Live-updating list with badge count; approve or decline with optional reason
+- **User Management** — View all users, search by BD Number, suspend/reactivate accounts
+- **Admin Users** — Dedicated view of all admin and super admin users
+- **Role Management** — Super admins can promote/demote admin roles
+- **CSV Import/Export** — Bulk import and export contacts as CSV files
+
+### UI/UX
+- **Material Design 3** — Google Contacts-like UI with light/dark/system theme support
 - **Keyboard-Aware Forms** — Focused inputs auto-scroll above the keyboard on Android and iOS
+- **Pull to Refresh** — Refresh the contact list with pull-down gesture
+- **Phone Actions** — Call, copy phone numbers directly from contact details
+- **Contact Avatars** — Colorful initial-based avatars generated from contact names
+- **Loading Skeletons** — Shimmer loading placeholders while data loads
+- **Error Boundaries** — Graceful error handling without app crashes
+- **Offline Banner** — Visual indicator when device is offline
+
+### Updates & Distribution
 - **Online APK Updates** — Mandatory in-app update flow via Firebase + GitHub Releases
+- **Fail-Open Design** — Offline users, broken configs, and failed checks never block the app
 
 ## Technology Stack
 
@@ -31,11 +62,11 @@ A production-ready Android office contact directory application built with Expo 
 | Server State | TanStack Query |
 | Local DB | Expo SQLite (WAL mode) |
 | Backend | Firebase Firestore + Auth |
-| Sync | Incremental via updatedAt |
-| Lists | FlashList |
+| Sync | Incremental via `updatedAt` timestamp |
+| Lists | FlashList (virtualized) |
 | Forms | React Hook Form |
 | Secure Storage | Expo Secure Store |
-| Icons | @expo/vector-icons |
+| Icons | @expo/vector-icons (Ionicons, MaterialCommunityIcons) |
 
 ## Commands
 
@@ -53,19 +84,23 @@ A production-ready Android office contact directory application built with Expo 
 ```
 src/
   app/                    # Expo Router pages (file-based routing)
-    _layout.tsx           # Root layout with auth guard
-    (auth)/               # Auth group (login)
-    (tabs)/               # Tab navigator (contacts, search, settings)
-    contact/              # Contact CRUD screens
-  components/ui/          # Reusable components
+    _layout.tsx           # Root layout with auth guard + splash
+    (auth)/               # Auth group (login, register, forgot-password, account-status)
+    (tabs)/               # Tab navigator (contacts, favorites, search, settings)
+    contact/              # Contact CRUD screens ([id], add, edit/[id])
+    admin/                # Admin screens (users, pending-approvals, admin-users)
+  components/
+    ui/                   # Reusable UI components (ContactCard, SearchBar, etc.)
+    auth/                 # Auth-specific components (AuthHeader)
+    admin/                # Admin-specific components (UserManageDialog)
   database/               # SQLite database + sync engine
-  firebase/               # Firebase config + services
-  hooks/                  # Custom hooks
-  services/               # Business logic services
-  store/                  # Zustand stores
-  types/                  # TypeScript types
-  utils/                  # Utilities (validation, formatting, permissions)
-  constants/              # Theme and app constants
+  firebase/               # Firebase config, auth, firestore, user services
+  hooks/                  # Custom hooks (useContacts, useAppUpdate, etc.)
+  services/               # Business logic (contact, CSV, app update)
+  store/                  # Zustand stores (auth, contacts, settings, sync)
+  theme/                  # Design tokens (colors, spacing, typography, etc.)
+  types/                  # TypeScript types (auth, contact, navigation, sync)
+  utils/                  # Utilities (validation, formatting, permissions, version)
 ```
 
 ## Getting Started
@@ -149,14 +184,15 @@ Firebase console only — regular users can never change their own role or appro
 ### Registration & Admin Approval
 
 - New users sign in with their **BD Number + password** (the app securely maps the BD number
-to their Firebase Auth identity via the `userLookup` collection — passwords never touch Firestore).
-- Users request registration through the **Request Registration** screen, which creates the
-Firebase Auth account and a `users/{uid}` profile with `status: "pending"`.
+  to their Firebase Auth identity via the `userLookup` collection — passwords never touch Firestore).
+- Users request registration through the **Request Registration** screen, selecting their
+  category (Officer / Airman / Civilian), which creates the Firebase Auth account and a
+  `users/{uid}` profile with `status: "pending"`.
 - Pending users cannot access contacts until an admin approves them.
 - Admins see **Settings → Pending Approvals** (with a live count badge) and can approve or
-decline registrations with an optional reason.
+  decline registrations with an optional reason.
 - **User Management** lets admins view all users, suspend/reactivate accounts, and (for
-super admins) manage admin roles.
+  super admins) manage admin roles.
 - Approved users keep offline access through a locally cached session.
 
 ### Running the App
@@ -235,7 +271,7 @@ Firebase config.
 
 | Step | Where |
 |------|-------|
-| Installed version | Read from the APK itself via `expo-constants` — never a stored flag |
+| Installed version | Read from the APK itself via `expo-application` — never a stored flag |
 | Release configuration | Firestore document `appConfig/android` (public read, admin write) |
 | Mandatory minimum | `minimumVersion` — below it the app shows the Update screen |
 | Latest release info | `latestVersion`, `apkUrl`, `releaseNotes`, `versionCode` |
@@ -436,13 +472,13 @@ single reusable `KeyboardAwareScreen` component
 
 ### Performance for 50,000+ Contacts
 
-- FlashList with estimated item sizes
-- SQLite with WAL mode and optimized indexes
-- Memoized components with React.memo
-- Search with LIKE queries on indexed columns
-- LIMIT 200 on search results
-- Alphabet index for fast scrolling
-- No Firestore queries for search — always local
+- FlashList with estimated item sizes for virtualized rendering
+- SQLite with WAL mode and optimized indexes on all searchable columns
+- Memoized components with `useCallback` and `useMemo`
+- Search with `LIKE` queries on indexed columns
+- `LIMIT 200` on search results to prevent UI lag
+- Alphabet index for fast scrolling to any letter
+- No Firestore queries for search — always local SQLite
 
 ### Realtime Sync
 
@@ -460,30 +496,56 @@ Firestore `onSnapshot` listeners watch for changes after `lastSyncTime`. When a 
 | NAME | string | Yes | Yes |
 | DESIGNATION | string | No | Yes |
 | BRANCH / TRADE | string | No | Yes |
-| OFFICE | string | No | Yes |
-| RESIDENCE | string | No | Yes |
+| OFFICE ADDRESS | string | No | Yes |
+| RESIDENCE ADDRESS | string | No | Yes |
 | SERVICE MOBILE | string | No | Yes |
 | PERSONAL MOBILE | string | No | Yes |
+| OFFICE TELEPHONE | string | No | Yes |
+| PERSONAL TELEPHONE | string | No | Yes |
 | REMARKS | string | No | Yes |
 
 ## Firebase Security Rules
 
-See `firebase.rules` for the complete ruleset. Key rules:
-- Only users with `status: "approved"` (or admins) can read contacts
-- Only users with `role: "admin"` / `"super_admin"` can create/update/delete contacts
-- Users can read their own user document; users can never change `role`, `status`,
-  `approvedAt`, `approvedBy`, `declinedAt`, `declinedBy`, or `declineReason` themselves
-- Only admins can approve/decline registrations and manage user status/roles
+See `firestore.rules` for the complete ruleset. Key rules:
+
+### Contacts (`contacts/{contactId}`)
+- **Read**: Approved users and admins
+- **Create / Update / Delete**: Admins only
+
+### Users (`users/{uid}`)
+- **Read**: Own profile (self) or any profile (admin)
+- **Create**: Self-registration only — must set `role: "user"` and `status: "pending"`
+- **Update (self)**: Limited to profile fields (`fullName`, `category`, `rank`, `branch`, etc.) — never `role`, `status`, or approval fields
+- **Update (admin)**: Full access including `role`, `status`, approval/decline fields
+
+### User Lookup (`userLookup/{bdNumber}`)
+- **Read**: Public (needed for login before authentication)
+- **Create**: Self only (must match `request.auth.uid`)
+- **Update / Delete**: Admins only
+
+### App Config (`appConfig/{key}`)
+- **Read**: Public (mandatory update check runs before login)
+- **Write**: Admins only
 
 ## Firestore Indexes
 
 See `firestore.indexes.json`. Required composite indexes:
-- `deleted ASC, NAME ASC`
-- `deleted ASC, updatedAt ASC`
-- `deleted ASC, BD NO ASC`
-- `deleted ASC, SERVICE MOBILE ASC`
-- `deleted ASC, PERSONAL MOBILE ASC`
-- `updatedAt ASC`
+
+### Contacts collection
+| Fields | Purpose |
+|--------|---------|
+| `deleted ASC, NAME ASC` | Full contact list sorted by name |
+| `deleted ASC, BD NO ASC` | Duplicate BD NO check |
+| `deleted ASC, SERVICE MOBILE ASC` | Search by service mobile |
+| `deleted ASC, PERSONAL MOBILE ASC` | Search by personal mobile |
+| `updatedAt ASC` | Incremental sync (`where updatedAt > lastSync, orderBy updatedAt`) |
+| `BD NO ASC, deleted ASC` | Duplicate BD NO check (alternative order) |
+
+### Users collection
+| Fields | Purpose |
+|--------|---------|
+| `status ASC, createdAt ASC` | Pending registrations list (orderBy createdAt) |
+| `role ASC` | Admin users query (`where role in ['admin', 'super_admin']`) |
 
 ## License
 

@@ -87,15 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-<<<<<<< HEAD
     namespace 'com.gs.mtr'
     defaultConfig {
         applicationId 'com.gs.mtr'
-=======
-    namespace 'com.yourcompany.pabxmtr'
-    defaultConfig {
-        applicationId 'com.yourcompany.pabxmtr'
->>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

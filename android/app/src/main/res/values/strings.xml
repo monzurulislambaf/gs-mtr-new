@@ -1,9 +1,5 @@
 <resources>
-<<<<<<< HEAD
   <string name="app_name">GS MTR</string>
-=======
-  <string name="app_name">PABX-MTR</string>
->>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0
   <string name="expo_system_ui_user_interface_style" translatable="false">automatic</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
 </resources>

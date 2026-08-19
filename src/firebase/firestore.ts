@@ -70,9 +70,7 @@ export async function fetchAllContacts(): Promise<Contact[]> {
     orderBy('NAME', 'asc')
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs
-    .filter((d) => d.data().deleted !== true)
-    .map((d) => contactFromFirestore(d.id, d.data()));
+  return snapshot.docs.map((d) => contactFromFirestore(d.id, d.data()));
 }
 
 export async function syncChangedContacts(lastSyncTime: number): Promise<SyncResult<Contact>> {

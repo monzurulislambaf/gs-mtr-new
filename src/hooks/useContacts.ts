@@ -9,6 +9,7 @@ import { Contact } from '@/types/contact';
 export function useContacts() {
   const store = useContactsStore();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const canAccessContacts = useAuthStore((s) => s.canAccessContacts);
   const isOnline = useSyncStore((s) => s.isOnline);
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
@@ -19,7 +20,7 @@ export function useContacts() {
   useEffect(() => {
     if (!isOnline) return;
     // Only approved users (and admins) receive realtime contact updates.
-    if (!useAuthStore.getState().canAccessContacts) return;
+    if (!canAccessContacts) return;
 
     const setupListener = async () => {
       try {
@@ -55,7 +56,7 @@ export function useContacts() {
         unsubscribeRef.current = null;
       }
     };
-  }, [isOnline]);
+  }, [isOnline, canAccessContacts]);
 
   const refresh = useCallback(async () => {
     await store.loadContacts();

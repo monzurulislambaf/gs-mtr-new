@@ -31,11 +31,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
 }
 expoAutolinking.useExpoModules()
 
-<<<<<<< HEAD
 rootProject.name = 'GS MTR'
-=======
-rootProject.name = 'PABX-MTR'
->>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0
 
 expoAutolinking.useExpoVersionCatalog()
 

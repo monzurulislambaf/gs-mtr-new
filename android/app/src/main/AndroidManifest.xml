@@ -27,11 +27,7 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-<<<<<<< HEAD
         <data android:scheme="gsmtr"/>
-=======
-        <data android:scheme="pabxmtr"/>
->>>>>>> 976be18251497c7c9549b752f4e9178f5f669dd0
       </intent-filter>
     </activity>
   </application>
