@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { performIncrementalSync, checkConnectivity, onConnectivityChange } from '@/database/sync';
 import { useAuthStore } from '@/store/authStore';
+import { useContactsStore } from '@/store/contactsStore';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 
 interface SyncStore {
@@ -63,6 +64,9 @@ export const useSyncStore = create<SyncStore>((set, get) => ({
         isSyncing: false,
         syncError: null,
       });
+      // Reload the local contacts into the store so the UI reflects the
+      // freshly synced cache without waiting for a future listener event.
+      useContactsStore.getState().loadContacts();
       console.log(
         `[SYNC] Firebase sync completed (${result.synced} synced, ${result.deleted} deleted)`
       );

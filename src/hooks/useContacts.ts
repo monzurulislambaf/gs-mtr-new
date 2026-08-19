@@ -3,7 +3,8 @@ import { useContactsStore } from '@/store/contactsStore';
 import { useAuthStore } from '@/store/authStore';
 import { useSyncStore } from '@/store/syncStore';
 import { listenContactChanges } from '@/firebase/firestore';
-import { getSyncMeta, upsertContacts, deleteContacts } from '@/database/database';
+import { getSyncMeta, setSyncMeta, upsertContacts, deleteContacts } from '@/database/database';
+import { performIncrementalSync } from '@/database/sync';
 import { Contact } from '@/types/contact';
 
 export function useContacts() {
@@ -24,22 +25,45 @@ export function useContacts() {
 
     const setupListener = async () => {
       try {
+        // Fresh installs have no sync cursor yet. The realtime query below only
+        // covers docs whose updatedAt > cursor, so on first run it could miss
+        // every existing contact. Seed the local cache with a full Firestore
+        // fetch first — this also works for legacy docs without a valid
+        // updatedAt timestamp (which range queries silently exclude).
         const lastSyncStr = await getSyncMeta('last_sync_time');
-        const lastSync = lastSyncStr ? parseInt(lastSyncStr, 10) : Date.now();
+        let lastSync = lastSyncStr ? parseInt(lastSyncStr, 10) || 0 : 0;
+
+        if (!lastSyncStr) {
+          try {
+            await performIncrementalSync();
+          } catch (error) {
+            console.error('[SYNC] Initial full sync failed:', error);
+          }
+          const syncedAt = await getSyncMeta('last_sync_time');
+          lastSync = syncedAt ? parseInt(syncedAt, 10) || 0 : 0;
+        }
 
         unsubscribeRef.current = listenContactChanges(
           lastSync,
           (changed: Contact[]) => {
             upsertContacts(changed).then(() => {
+              setSyncMeta('last_sync_time', String(Date.now()));
               store.loadContacts();
+            }).catch((error) => {
+              console.error('[SYNC] Local upsert failed:', error);
             });
           },
           (deleted: string[]) => {
             deleteContacts(deleted).then(() => {
+              setSyncMeta('last_sync_time', String(Date.now()));
               store.loadContacts();
+            }).catch((error) => {
+              console.error('[SYNC] Local delete failed:', error);
             });
           },
-          () => {}
+          (error) => {
+            console.error('[SYNC] Realtime listener error:', error);
+          }
         );
       } catch (error) {
         // Firebase unavailable: realtime updates are skipped, SQLite data
