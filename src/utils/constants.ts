@@ -14,6 +14,26 @@ export const APP_NAME = 'GS MTR';
 export const APP_VERSION =
   Application.nativeApplicationVersion ?? Constants.expoConfig?.version ?? '0.0.0';
 
+/**
+ * Build number (Android versionCode) of the installed APK.
+ * EAS auto-increments this with each build when `autoIncrement: true` is set
+ * in the build profile. Used for display and update check debugging.
+ */
+export const APP_BUILD_NUMBER =
+  Application.nativeBuildVersion ?? Constants.expoConfig?.android?.versionCode?.toString() ?? '?';
+
+/**
+ * Full version info for debugging. Logs both versionName and versionCode
+ * so you can verify what the APK reports vs what Firestore expects.
+ */
+export function getVersionInfo() {
+  return {
+    versionName: APP_VERSION,
+    versionCode: APP_BUILD_NUMBER,
+    source: Application.nativeApplicationVersion ? 'native' : 'expo-config',
+  };
+}
+
 export const SYNC_INTERVAL = 30000;
 export const DEBOUNCE_DELAY = 150;
 

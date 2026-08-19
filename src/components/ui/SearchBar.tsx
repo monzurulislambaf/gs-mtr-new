@@ -1,6 +1,7 @@
-import { memo, useCallback, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Searchbar, IconButton, useTheme } from 'react-native-paper';
+import { memo, useRef } from 'react';
+import { StyleSheet } from 'react-native';
+import { Searchbar, useTheme } from 'react-native-paper';
+import { spacing, radius, typography } from '@/theme';
 
 interface SearchBarProps {
   value: string;
@@ -38,12 +39,12 @@ export const SearchBar = memo(function SearchBar({
 
 const styles = StyleSheet.create({
   searchBar: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    borderRadius: 24,
+    marginHorizontal: spacing.lg,
+    marginVertical: spacing.sm,
+    borderRadius: radius.xxl,
     elevation: 0,
   },
   input: {
-    fontSize: 16,
+    ...typography.bodySmall,
   },
 });

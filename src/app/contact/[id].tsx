@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import {
   Text,
   Button,
@@ -11,6 +11,7 @@ import {
   Portal,
   Snackbar,
 } from 'react-native-paper';
+import { spacing, radius, typography } from '@/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { ContactAvatar } from '@/components/ui/ContactAvatar';
@@ -336,12 +337,12 @@ const styles = StyleSheet.create({
   },
   name: { fontWeight: '700', textAlign: 'center' },
   designation: {
-    color: '#555',
+    ...typography.bodySmall,
     fontWeight: '500',
     textAlign: 'center',
   },
   branch: {
-    color: '#888',
+    ...typography.caption,
     textAlign: 'center',
   },
   card: {
@@ -353,14 +354,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   addressLabel: {
-    color: '#888',
+    ...typography.overline,
     fontWeight: '600',
-    letterSpacing: 0.5,
   },
   addressValue: {
-    color: '#666',
-    marginTop: 2,
-    lineHeight: 18,
+    ...typography.caption,
+    marginTop: spacing.xxs,
   },
   divider: { marginVertical: 4 },
   phoneRow: {
@@ -371,7 +370,7 @@ const styles = StyleSheet.create({
   },
   phoneLeft: { flex: 1 },
   phoneLabel: {
-    color: '#888',
+    ...typography.overline,
     fontWeight: '600',
   },
   phoneValue: {

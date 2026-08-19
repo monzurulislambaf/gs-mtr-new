@@ -47,3 +47,23 @@ export function compareVersions(a: string, b: string): number {
 export function isUpdateRequired(currentVersion: string, minimumVersion: string): boolean {
   return compareVersions(currentVersion, minimumVersion) < 0;
 }
+
+/**
+ * Validates a Firestore config value for `minimumVersion` or `latestVersion`.
+ * Returns null if valid, or a human-readable error string.
+ *
+ * Common mistakes this catches:
+ *   - Putting the integer versionCode (e.g. 42) instead of semver (e.g. 1.1.0)
+ *   - Empty string
+ *   - Non-semver format
+ */
+export function validateVersionField(value: string, fieldName: string): string | null {
+  if (!value || !value.trim()) return `${fieldName} is empty`;
+  const parsed = parseVersion(value);
+  if (!parsed) return `${fieldName} "${value}" is not valid semver (expected e.g. 1.0.0)`;
+  // Catch integer versionCode accidentally used as versionName
+  if (/^\d+$/.test(value.trim())) {
+    return `${fieldName} "${value}" looks like a versionCode (integer), not a versionName (semver like 1.0.0)`;
+  }
+  return null;
+}

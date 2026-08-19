@@ -3,6 +3,7 @@ import { IconButton, Text, useTheme } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useSyncStore } from '@/store/syncStore';
+import { spacing, radius, typography } from '@/theme';
 
 function useIsDark(): boolean {
   const themeSetting = useSettingsStore((s) => s.theme);
@@ -47,16 +48,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingRight: 4,
+    gap: spacing.xs,
+    paddingRight: spacing.xs,
   },
   status: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 12,
+    gap: spacing.xs,
+    paddingHorizontal: spacing.xs + spacing.xxs,
+    paddingVertical: spacing.xxs,
+    borderRadius: radius.lg,
   },
   dot: {
     width: 6,
@@ -64,8 +65,8 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   statusText: {
+    ...typography.micro,
     fontWeight: '600',
-    letterSpacing: 0.3,
   },
   iconBtn: {
     padding: 0,

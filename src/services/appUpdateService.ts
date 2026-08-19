@@ -4,8 +4,8 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { getFirebaseDb } from '@/firebase/config';
 import { COLLECTIONS } from '@/firebase/collections';
-import { isUpdateRequired } from '@/utils/version';
-import { APP_VERSION } from '@/utils/constants';
+import { isUpdateRequired, parseVersion, validateVersionField } from '@/utils/version';
+import { APP_VERSION, getVersionInfo } from '@/utils/constants';
 
 /**
  * Reusable one-time APK update system for GS MTR.
@@ -94,6 +94,18 @@ export async function getRemoteAppConfig(): Promise<AppUpdateConfig | null> {
 /**
  * Compares the installed version against the remote `minimumVersion`.
  *
+ * The comparison uses `minimumVersion` from Firestore (a semver string like
+ * "1.1.0") against the installed APK's `versionName` (also semver, read
+ * via expo-application). The Android `versionCode` (integer) is NOT used
+ * for the update gate — it only controls whether Android allows the install.
+ *
+ * Firestore `appConfig/android` fields:
+ *   minimumVersion  — semver string, e.g. "1.1.0". Installed < minimum → mandatory update.
+ *   latestVersion   — semver string, e.g. "1.2.0". Shown on the update screen.
+ *   apkUrl          — direct download URL for the APK.
+ *   versionCode     — integer, informational only (not compared here).
+ *   releaseNotes    — shown on the update screen.
+ *
  * Fails open: any read/parse problem yields `updateRequired: false` so the
  * update system can never block or crash the app. Offline behavior is handled
  * by the caller (the hook never calls this without connectivity).
@@ -112,14 +124,48 @@ export async function checkForUpdate(): Promise<UpdateCheckResult> {
   // Fail open when the installed version cannot be resolved: forcing an
   // update with an unknown current version would loop forever ("Update
   // Required" on every launch, even after installing the new APK).
-  if (currentVersion === DEFAULT_VERSION) return base;
+  if (currentVersion === DEFAULT_VERSION) {
+    console.warn('[UPDATE] Installed version is unknown (0.0.0) — skipping check');
+    return base;
+  }
 
   const config = await getRemoteAppConfig();
-  if (!config) return base;
+  if (!config) {
+    console.log('[UPDATE] No Firestore config found — app is up to date');
+    return base;
+  }
+
+  // Validate the Firestore config before comparing.
+  const minError = validateVersionField(config.minimumVersion, 'minimumVersion');
+  if (minError) {
+    console.warn(`[UPDATE] ${minError} — skipping check`);
+    return base;
+  }
+  const latestError = validateVersionField(config.latestVersion, 'latestVersion');
+  if (latestError) {
+    console.warn(`[UPDATE] ${latestError}`);
+    // latestVersion is informational — don't skip the check
+  }
+  const curParsed = parseVersion(currentVersion);
+  if (!curParsed) {
+    console.warn(
+      `[UPDATE] Installed version "${currentVersion}" is not valid semver — skipping check`,
+    );
+    return base;
+  }
+
+  const required = isUpdateRequired(currentVersion, config.minimumVersion);
+  const info = getVersionInfo();
+  console.log(
+    `[UPDATE] versionName=${info.versionName} (source=${info.source}) ` +
+    `versionCode=${info.versionCode} | ` +
+    `Firestore minimumVersion=${config.minimumVersion} latestVersion=${config.latestVersion} ` +
+    `| updateRequired=${required}`,
+  );
 
   return {
     ...base,
-    updateRequired: isUpdateRequired(currentVersion, config.minimumVersion),
+    updateRequired: required,
     latestVersion: config.latestVersion,
     minimumVersion: config.minimumVersion,
     apkUrl: config.apkUrl,

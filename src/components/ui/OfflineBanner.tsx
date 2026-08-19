@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
+import { spacing } from '@/theme';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -44,8 +45,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
     zIndex: 1000,
     alignItems: 'center',
   },

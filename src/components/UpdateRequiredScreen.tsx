@@ -3,7 +3,7 @@ import { Text, Button, ProgressBar, ActivityIndicator, useTheme } from 'react-na
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { APP_NAME } from '@/utils/constants';
+import { APP_NAME, APP_BUILD_NUMBER } from '@/utils/constants';
 import type { UpdateCheckResult } from '@/services/appUpdateService';
 
 interface UpdateRequiredScreenProps {
@@ -72,19 +72,25 @@ export function UpdateRequiredScreen({
           <View style={[styles.infoRow, { backgroundColor: theme.colors.surfaceVariant }]}>
             <View style={styles.infoItem}>
               <Text variant="labelMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-                Current Version
+                Installed
               </Text>
               <Text variant="titleMedium" style={{ color: theme.colors.onSurface }}>
                 {info?.currentVersion ?? '—'}
+              </Text>
+              <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
+                Build {APP_BUILD_NUMBER}
               </Text>
             </View>
             <View style={styles.infoDivider} />
             <View style={styles.infoItem}>
               <Text variant="labelMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-                Required Version
+                Required
               </Text>
               <Text variant="titleMedium" style={{ color: theme.colors.onSurface }}>
                 {info?.minimumVersion ?? '—'}
+              </Text>
+              <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
+                Latest {info?.latestVersion ?? '—'}
               </Text>
             </View>
           </View>

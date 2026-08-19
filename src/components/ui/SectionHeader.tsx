@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
+import { spacing } from '@/theme';
 
 interface SectionHeaderProps {
   title: string;
@@ -29,8 +30,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    paddingTop: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    paddingTop: spacing.lg,
   },
 });

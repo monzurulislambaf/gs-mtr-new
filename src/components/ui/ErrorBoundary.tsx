@@ -2,6 +2,7 @@ import { Component, ErrorInfo, ReactNode } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Button, useTheme } from 'react-native-paper';
 import { getFriendlyErrorMessage } from '@/utils/errors';
+import { spacing, radius } from '@/theme';
 
 interface Props {
   children: ReactNode;
@@ -55,17 +56,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
+    padding: spacing.xl,
   },
   title: {
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   message: {
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: spacing.xl,
     opacity: 0.7,
   },
   button: {
-    borderRadius: 20,
+    borderRadius: radius.full,
   },
 });

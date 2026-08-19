@@ -5,6 +5,7 @@ import { Contact } from '@/types/contact';
 import { ContactAvatar } from './ContactAvatar';
 import { makePhoneCall } from '@/utils/permissions';
 import { formatPhone } from '@/utils/formatters';
+import { spacing, radius, typography } from '@/theme';
 
 interface ContactCardProps {
   contact: Contact;
@@ -130,40 +131,40 @@ export const ContactCard = memo(function ContactCard({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 12,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + spacing.xxs,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    marginHorizontal: 12,
-    marginVertical: 4,
+    marginHorizontal: spacing.md,
+    marginVertical: spacing.xs,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: spacing.md,
   },
   info: {
     flex: 1,
-    gap: 2,
+    gap: spacing.xxs,
     minWidth: 0,
   },
   name: {
+    ...typography.bodySmall,
     fontWeight: '600',
-    lineHeight: 23,
     flex: 1,
   },
   designation: {
+    ...typography.caption,
     fontWeight: '500',
-    lineHeight: 17,
   },
   officeAddress: {
-    color: '#888',
+    ...typography.caption,
     lineHeight: 15,
-    marginTop: 1,
+    marginTop: spacing.xxs,
   },
   phonesContainer: {
-    marginTop: 4,
-    gap: 2,
+    marginTop: spacing.xs,
+    gap: spacing.xxs,
   },
   phoneRow: {
     flexDirection: 'row',
@@ -176,14 +177,13 @@ const styles = StyleSheet.create({
     height: 22,
   },
   phoneValue: {
-    fontSize: 14,
-    lineHeight: 19,
+    ...typography.label,
     flex: 1,
   },
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 4,
+    marginLeft: spacing.xs,
   },
   actionBtn: {
     padding: 0,

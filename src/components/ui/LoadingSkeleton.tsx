@@ -8,6 +8,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { useTheme } from 'react-native-paper';
+import { spacing, radius } from '@/theme';
 
 interface LoadingSkeletonProps {
   count?: number;
@@ -71,32 +72,32 @@ export function LoadingSkeleton({ count = 8 }: LoadingSkeletonProps) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
-    gap: 4,
+    paddingHorizontal: spacing.lg,
+    gap: spacing.xs,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    gap: 12,
+    paddingVertical: spacing.md,
+    gap: spacing.md,
   },
   avatar: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: radius.full,
   },
   textContainer: {
     flex: 1,
-    gap: 6,
+    gap: spacing.xs + spacing.xxs,
   },
   nameLine: {
     width: '60%',
     height: 14,
-    borderRadius: 4,
+    borderRadius: radius.sm,
   },
   subLine: {
     width: '40%',
     height: 10,
-    borderRadius: 4,
+    borderRadius: radius.sm,
   },
 });

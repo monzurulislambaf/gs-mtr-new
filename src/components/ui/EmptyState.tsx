@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Text, Button, Icon, useTheme } from 'react-native-paper';
+import { spacing, radius, typography } from '@/theme';
 
 interface EmptyStateProps {
   icon?: string;
@@ -55,8 +56,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
-    paddingVertical: 64,
+    paddingHorizontal: spacing.xxl,
+    paddingVertical: spacing.xxxl,
   },
   iconCircle: {
     width: 72,
@@ -64,17 +65,17 @@ const styles = StyleSheet.create({
     borderRadius: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   title: {
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   subtitle: {
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: spacing.xl,
   },
   button: {
-    borderRadius: 20,
+    borderRadius: radius.full,
   },
 });

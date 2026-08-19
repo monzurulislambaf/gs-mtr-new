@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { PaperProvider } from 'react-native-paper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createAppTheme, useIsDark } from '@/constants/theme';
 import { useAuthStore } from '@/store/authStore';
@@ -119,8 +120,9 @@ export default function RootLayout() {
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <PaperProvider theme={paperTheme}>
-          <SafeAreaProvider>
+        <KeyboardProvider>
+          <PaperProvider theme={paperTheme}>
+            <SafeAreaProvider>
             <StatusBar style={isDark ? 'light' : 'dark'} />
             {update.updateRequired && update.info ? (
               <UpdateRequiredScreen
@@ -151,8 +153,9 @@ export default function RootLayout() {
                 />
               </Stack>
             )}
-          </SafeAreaProvider>
-        </PaperProvider>
+            </SafeAreaProvider>
+          </PaperProvider>
+        </KeyboardProvider>
       </GestureHandlerRootView>
     </ErrorBoundary>
   );

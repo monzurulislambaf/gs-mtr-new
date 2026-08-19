@@ -21,7 +21,7 @@ import { usePendingRegistrations } from '@/hooks/usePendingRegistrations';
 import { getAllContactsCount } from '@/database/database';
 import { exportContactsToCsv, bulkImportFromCsv } from '@/services/csvService';
 import { bulkImportContacts } from '@/firebase/firestore';
-import { APP_NAME, APP_VERSION } from '@/utils/constants';
+import { APP_NAME, APP_VERSION, APP_BUILD_NUMBER } from '@/utils/constants';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 import { HeaderActions } from '@/components/ui/HeaderActions';
 
@@ -213,7 +213,7 @@ export default function SettingsScreen() {
           </List.Subheader>
           <List.Item
             title={APP_NAME}
-            description={`Version ${APP_VERSION}`}
+            description={`Version ${APP_VERSION} (${APP_BUILD_NUMBER})`}
             left={(props) => <List.Icon {...props} icon="information" />}
           />
           <List.Item

@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
+import { spacing, radius, typography } from '@/theme';
 
 interface StatusBadgeProps {
   label: string;
@@ -21,22 +22,24 @@ export function StatusBadge({ label, color, dot = true }: StatusBadgeProps) {
   );
 }
 
+import { colors } from '@/theme';
+
 export const STATUS_COLORS: Record<string, string> = {
-  pending: '#FF9800',
-  approved: '#4CAF50',
-  declined: '#F44336',
-  suspended: '#9E9E9E',
+  pending: colors.pending,
+  approved: colors.approved,
+  declined: colors.declined,
+  suspended: colors.suspended,
 };
 
 const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    borderRadius: 10,
+    gap: spacing.xs,
+    borderRadius: radius.sm + radius.sm,
     borderWidth: 1,
-    paddingHorizontal: 9,
-    paddingVertical: 3,
+    paddingHorizontal: spacing.sm + spacing.xxs,
+    paddingVertical: spacing.xxs,
     alignSelf: 'flex-start',
   },
   dot: {
@@ -45,8 +48,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   label: {
+    ...typography.micro,
     fontWeight: '600',
     textTransform: 'capitalize',
-    letterSpacing: 0.4,
   },
 });
