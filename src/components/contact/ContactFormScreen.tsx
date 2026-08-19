@@ -11,7 +11,7 @@ import {
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScreen, useKeyboardAwareForm } from '@/components/ui/KeyboardAwareScreen';
-import { spacing, radius, typography } from '@/theme';
+import { spacing } from '@/theme';
 
 /** Contact form data shape — single source of truth for add and edit screens. */
 export interface ContactFormData {
@@ -47,7 +47,6 @@ export const EMPTY_FORM: ContactFormData = {
 interface FieldDef {
   key: keyof ContactFormData;
   label: string;
-  required?: boolean;
   keyboardType?: 'phone-pad' | 'default';
   multiline?: boolean;
 }
@@ -57,9 +56,9 @@ const FIELD_GROUPS: { title: string; fields: FieldDef[] }[] = [
   {
     title: 'Identity',
     fields: [
-      { key: 'BD NO' as const, label: 'BD NO', required: true },
-      { key: 'RANK' as const, label: 'RANK', required: true },
-      { key: 'NAME' as const, label: 'NAME', required: true },
+      { key: 'BD NO' as const, label: 'BD NO' },
+      { key: 'RANK' as const, label: 'RANK' },
+      { key: 'NAME' as const, label: 'NAME' },
       { key: 'DESIGNATION' as const, label: 'DESIGNATION' },
       { key: 'BRANCH / TRADE' as const, label: 'BRANCH / TRADE' },
     ],
@@ -74,7 +73,7 @@ const FIELD_GROUPS: { title: string; fields: FieldDef[] }[] = [
   {
     title: 'Phone',
     fields: [
-      { key: 'SERVICE MOBILE' as const, label: 'SERVICE MOBILE', keyboardType: 'phone-pad' as const, required: true },
+      { key: 'SERVICE MOBILE' as const, label: 'SERVICE MOBILE', keyboardType: 'phone-pad' as const },
       { key: 'PERSONAL MOBILE' as const, label: 'PERSONAL MOBILE', keyboardType: 'phone-pad' as const },
       { key: 'OFFICE TELEPHONE' as const, label: 'OFFICE TELEPHONE', keyboardType: 'phone-pad' as const },
       { key: 'PERSONAL TELEPHONE' as const, label: 'RESIDENCE TELEPHONE', keyboardType: 'phone-pad' as const },
@@ -106,6 +105,18 @@ interface ContactFormScreenProps {
  * duplication. Handles form state, validation errors, keyboard awareness,
  * and loading/success feedback.
  */
+function SectionTitle({ title }: { title: string }) {
+  const theme = useTheme();
+  return (
+    <View style={styles.sectionRow}>
+      <View style={[styles.sectionBar, { backgroundColor: theme.colors.primary }]} />
+      <Text variant="titleMedium" style={[styles.sectionTitle, { color: theme.colors.primary }]}>
+        {title.toUpperCase()}
+      </Text>
+    </View>
+  );
+}
+
 export function ContactFormScreen({
   mode,
   initialData,
@@ -136,21 +147,6 @@ export function ContactFormScreen({
   }
 
   async function handleSave() {
-    // Validate required fields
-    const requiredFields = FIELD_GROUPS.flatMap((g) =>
-      g.fields.filter((f) => f.required).map((f) => f.key),
-    );
-    const newErrors: Record<string, string> = {};
-    for (const field of requiredFields) {
-      if (!form[field]?.trim()) {
-        newErrors[field] = `${field} is required`;
-      }
-    }
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
     setLoading(true);
     try {
       await onSubmit(form);
@@ -165,45 +161,53 @@ export function ContactFormScreen({
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <KeyboardAwareScreen form={keyboardForm} contentContainerStyle={styles.scroll}>
-        {FIELD_GROUPS.map((group, groupIndex) => (
-          <View key={group.title} style={styles.fieldGroup}>
-            {groupIndex > 0 && <View style={styles.groupDivider} />}
-            <Text variant="labelSmall" style={[styles.groupTitle, { color: theme.colors.primary }]}>
-              {group.title.toUpperCase()}
-            </Text>
-            {group.fields.map((field) => (
-              <View key={field.key}>
-                <TextInput
-                  label={field.label}
-                  value={form[field.key]}
-                  onChangeText={(t) => updateField(field.key, t)}
-                  onFocus={() => focusField(field.key)}
-                  onLayout={captureLayout(field.key)}
-                  mode="outlined"
-                  style={styles.input}
-                  error={!!errors[field.key]}
-                  keyboardType={field.keyboardType}
-                  multiline={field.multiline}
-                  numberOfLines={field.multiline ? 3 : undefined}
-                />
-                {errors[field.key] && (
-                  <HelperText type="error">{errors[field.key]}</HelperText>
-                )}
-              </View>
-            ))}
-          </View>
-        ))}
-
-        <Button
-          mode="contained"
-          onPress={handleSave}
-          loading={loading}
-          disabled={loading}
-          style={styles.saveButton}
-          contentStyle={styles.saveButtonContent}
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: theme.colors.surface,
+              shadowColor: theme.dark ? '#000000' : '#0B7F74',
+            },
+          ]}
         >
-          {mode === 'add' ? 'Save Contact' : 'Update Contact'}
-        </Button>
+          {FIELD_GROUPS.map((group) => (
+            <View key={group.title}>
+              <SectionTitle title={group.title} />
+              {group.fields.map((field) => (
+                <View key={field.key}>
+                  <TextInput
+                    label={field.label}
+                    value={form[field.key]}
+                    onChangeText={(t) => updateField(field.key, t)}
+                    onFocus={() => focusField(field.key)}
+                    onLayout={captureLayout(field.key)}
+                    mode="outlined"
+                    style={styles.input}
+                    outlineStyle={styles.inputOutline}
+                    error={!!errors[field.key]}
+                    keyboardType={field.keyboardType}
+                    multiline={field.multiline}
+                    numberOfLines={field.multiline ? 3 : undefined}
+                  />
+                  {errors[field.key] && (
+                    <HelperText type="error">{errors[field.key]}</HelperText>
+                  )}
+                </View>
+              ))}
+            </View>
+          ))}
+
+          <Button
+            mode="contained"
+            onPress={handleSave}
+            loading={loading}
+            disabled={loading}
+            style={styles.saveButton}
+            contentStyle={styles.saveButtonContent}
+          >
+            {mode === 'add' ? 'Save Contact' : 'Update Contact'}
+          </Button>
+        </View>
       </KeyboardAwareScreen>
 
       <Portal>
@@ -224,31 +228,48 @@ export function ContactFormScreen({
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scroll: {
-    padding: spacing.lg,
     paddingBottom: spacing.xxxl,
   },
-  fieldGroup: {
-    marginBottom: spacing.sm,
+  card: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 24,
+    padding: 20,
+    elevation: 6,
+    shadowOpacity: 0.14,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
   },
-  groupTitle: {
-    ...typography.overline,
-    marginBottom: spacing.xs,
-    marginTop: spacing.sm,
+  sectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 14,
+    marginBottom: 10,
   },
-  groupDivider: {
-    height: 1,
-    backgroundColor: 'transparent',
-    marginVertical: spacing.xs,
+  sectionBar: {
+    width: 4,
+    height: 18,
+    borderRadius: 2,
+    marginRight: 8,
+  },
+  sectionTitle: {
+    letterSpacing: 1.2,
+    fontWeight: '600',
   },
   input: {
-    marginBottom: spacing.xs,
-    borderRadius: radius.md,
+    marginBottom: 4,
+    borderRadius: 14,
+    backgroundColor: 'transparent',
+  },
+  inputOutline: {
+    borderRadius: 14,
   },
   saveButton: {
-    marginTop: spacing.lg,
-    borderRadius: radius.xxl,
+    marginTop: 24,
+    borderRadius: 28,
+    height: 52,
   },
   saveButtonContent: {
-    paddingVertical: spacing.xs,
+    height: 52,
   },
 });

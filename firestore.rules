@@ -31,6 +31,7 @@ service cloud.firestore {
       // Admins are provisioned through the console and may not always carry a
       // stored status field, so admins always retain contact access.
       allow read: if isApproved() || isAdmin();
+      // Only admins may create, edit or delete contacts.
       allow create, update, delete: if isAdmin();
     }
 
@@ -57,6 +58,11 @@ service cloud.firestore {
 
       // Admins may change role, status, approval fields, etc.
       allow update: if isAdmin();
+
+      // Admins may permanently delete regular users. Admin accounts must be
+      // demoted ("Remove Admin") first — super admins can never be deleted.
+      allow delete: if isAdmin() && request.auth.uid != uid
+        && get(/databases/$(database)/documents/users/$(uid)).data.role == 'user';
     }
 
     // BD Number -> identity mapping used only for login. It contains no

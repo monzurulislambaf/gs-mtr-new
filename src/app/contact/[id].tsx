@@ -29,7 +29,6 @@ import * as FileSystem from 'expo-file-system/legacy';
 export default function ContactDetailsScreen() {
   const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isAdmin = useAuthStore((s) => s.isAdmin);
   const [contact, setContact] = useState<Contact | null>(null);
   const [loading, setLoading] = useState(true);

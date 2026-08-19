@@ -26,7 +26,6 @@ export default function HomeScreen() {
     isLoading,
     isSelectionMode,
     selectedIds,
-    isAuthenticated,
     toggleSelection,
     clearSelection,
     performSearch,
@@ -146,13 +145,13 @@ export default function HomeScreen() {
       contact={item}
       isSelected={selectedIds.has(item.id)}
       isSelectionMode={isSelectionMode}
-      isAdmin={isAuthenticated}
+      isAdmin={isAdmin}
       onPress={() => handleContactPress(item)}
       onLongPress={() => handleContactLongPress(item)}
       onEditPress={() => router.push(`/contact/edit/${item.id}` as any)}
       onFavoritePress={toggleFavorite}
     />
-  ), [selectedIds, isSelectionMode, isAuthenticated, handleContactPress, handleContactLongPress, toggleFavorite]);
+  ), [selectedIds, isSelectionMode, isAdmin, handleContactPress, handleContactLongPress, toggleFavorite]);
 
   const renderSectionHeader = useCallback(({ section }: { section: { key: string } }) => (
     <SectionHeader title={section.key} />
@@ -197,7 +196,7 @@ export default function HomeScreen() {
           performSearch('');
         }}
       />
-      {isSelectionMode && isAuthenticated && selectedIds.size > 0 && (
+      {isSelectionMode && isAdmin && selectedIds.size > 0 && (
         <View style={styles.batchActions}>
           <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
             {selectedIds.size} selected
@@ -236,7 +235,7 @@ export default function HomeScreen() {
           <AlphabetIndex onLetterPress={handleLetterPress} />
         </View>
       )}
-      {isAuthenticated ? (
+      {isAdmin ? (
         <FAB
           icon="plus"
           style={[styles.fab, { backgroundColor: theme.colors.primary }]}

@@ -18,6 +18,7 @@ import { getFavoriteContacts } from '@/database/database';
 
 export default function FavoritesScreen() {
   const theme = useTheme();
+  const isAdmin = useAuthStore((s) => s.isAdmin);
   const {
     contacts,
     isLoading,
@@ -105,13 +106,13 @@ export default function FavoritesScreen() {
       contact={item}
       isSelected={selectedIds.has(item.id)}
       isSelectionMode={isSelectionMode}
-      isAdmin={isAuthenticated}
+      isAdmin={isAdmin}
       onPress={() => handleContactPress(item)}
       onLongPress={() => handleContactLongPress(item)}
       onEditPress={() => router.push(`/contact/edit/${item.id}` as any)}
       onFavoritePress={toggleFavorite}
     />
-  ), [selectedIds, isSelectionMode, isAuthenticated, handleContactPress, handleContactLongPress, toggleFavorite]);
+  ), [selectedIds, isSelectionMode, isAdmin, handleContactPress, handleContactLongPress, toggleFavorite]);
 
   const renderSectionHeader = useCallback(({ section }: { section: { key: string } }) => (
     <SectionHeader title={section.key} />

@@ -5,6 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useContacts } from '@/hooks/useContacts';
+import { useAuthStore } from '@/store/authStore';
 import { ContactCard } from '@/components/ui/ContactCard';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -25,6 +26,7 @@ const SEARCH_FIELDS = [
 
 export default function SearchScreen() {
   const theme = useTheme();
+  const isAdmin = useAuthStore((s) => s.isAdmin);
   const {
     contacts,
     searchQuery,
@@ -32,7 +34,6 @@ export default function SearchScreen() {
     isLoading,
     isSelectionMode,
     selectedIds,
-    isAuthenticated,
     toggleSelection,
     performSearch,
     clearSearch,
@@ -114,13 +115,13 @@ export default function SearchScreen() {
       contact={item}
       isSelected={selectedIds.has(item.id)}
       isSelectionMode={isSelectionMode}
-      isAdmin={isAuthenticated}
+      isAdmin={isAdmin}
       onPress={() => handleContactPress(item)}
       onLongPress={() => handleContactLongPress(item)}
       onEditPress={() => router.push(`/contact/edit/${item.id}` as any)}
       onFavoritePress={toggleFavorite}
     />
-  ), [selectedIds, isSelectionMode, isAuthenticated, handleContactPress, handleContactLongPress, toggleFavorite]);
+  ), [selectedIds, isSelectionMode, isAdmin, handleContactPress, handleContactLongPress, toggleFavorite]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>

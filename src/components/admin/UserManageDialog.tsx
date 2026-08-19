@@ -35,6 +35,8 @@ interface UserManageDialogProps {
   visible: boolean;
   user: UserProfile | null;
   canManage: boolean;
+  /** Whether this user may be permanently deleted. Reserved for super admins. */
+  canDelete?: boolean;
   busy: boolean;
   showMakeAdmin?: boolean;
   onDismiss: () => void;
@@ -47,6 +49,7 @@ export function UserManageDialog({
   visible,
   user,
   canManage,
+  canDelete = false,
   busy,
   showMakeAdmin = true,
   onDismiss,
@@ -149,24 +152,26 @@ export function UserManageDialog({
                 ) : null}
               </View>
 
-              <View style={styles.section}>
-                <Text
-                  variant="labelLarge"
-                  style={{ color: theme.colors.error, letterSpacing: 0.5, fontWeight: '700' }}
-                >
-                  DELETE ACCOUNT
-                </Text>
-                <Button
-                  mode="outlined"
-                  icon="trash-bin"
-                  textColor={theme.colors.error}
-                  onPress={onRequestDelete}
-                  disabled={busy}
-                  style={styles.actionButton}
-                >
-                  Delete User
-                </Button>
-              </View>
+              {canDelete && (
+                <View style={styles.section}>
+                  <Text
+                    variant="labelLarge"
+                    style={{ color: theme.colors.error, letterSpacing: 0.5, fontWeight: '700' }}
+                  >
+                    DELETE ACCOUNT
+                  </Text>
+                  <Button
+                    mode="outlined"
+                    icon="trash-bin"
+                    textColor={theme.colors.error}
+                    onPress={onRequestDelete}
+                    disabled={busy}
+                    style={styles.actionButton}
+                  >
+                    Delete User
+                  </Button>
+                </View>
+              )}
             </>
           )}
         </View>

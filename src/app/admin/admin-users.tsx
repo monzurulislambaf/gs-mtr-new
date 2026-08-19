@@ -91,6 +91,15 @@ export default function AdminUsersScreen() {
     me.uid !== selected.uid &&
     selected.role !== 'super_admin';
 
+  // Only regular users can be deleted directly. To delete an admin you must
+  // first demote them via "Remove Admin", then the delete option appears.
+  const canDelete =
+    !!selected &&
+    !!me &&
+    isAdminRole(me.role) &&
+    me.uid !== selected.uid &&
+    selected.role === 'user';
+
   const renderItem = useCallback(
     ({ item }: { item: UserProfile }) => {
       const color = STATUS_COLORS[item.status] || '#9E9E9E';
@@ -181,6 +190,7 @@ export default function AdminUsersScreen() {
           visible={!!selected}
           user={selected}
           canManage={canManage}
+          canDelete={canDelete}
           busy={busy}
           showMakeAdmin={false}
           onDismiss={() => setSelected(null)}
