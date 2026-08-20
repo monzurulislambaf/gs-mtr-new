@@ -18,9 +18,9 @@ import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useContactsStore } from '@/store/contactsStore';
 import { usePendingRegistrations } from '@/hooks/usePendingRegistrations';
-import { getAllContactsCount } from '@/database/database';
+import { getAllContactsCount, upsertContacts } from '@/database/database';
 import { exportContactsToCsv, bulkImportFromCsv } from '@/services/csvService';
-import { bulkImportContacts } from '@/firebase/firestore';
+import { bulkImportContacts, fetchAllContacts } from '@/firebase/firestore';
 import { APP_NAME, APP_VERSION, APP_BUILD_NUMBER } from '@/utils/constants';
 import { getFriendlyErrorMessage } from '@/utils/errors';
 import { HeaderActions } from '@/components/ui/HeaderActions';
@@ -65,9 +65,17 @@ export default function SettingsScreen() {
     setImporting(true);
     try {
       const result = await bulkImportFromCsv(bulkImportContacts);
+      if (result.errors.length === 0 && result.imported > 0) {
+        const all = await fetchAllContacts();
+        await upsertContacts(all);
+      }
       await reloadContacts();
       getAllContactsCount().then(setContactCount);
-      showSnackbar(`Imported: ${result.imported}, Skipped: ${result.skipped}`);
+      const message =
+        result.errors.length > 0
+          ? result.errors[0]
+          : `Imported: ${result.imported}, Skipped: ${result.skipped}`;
+      showSnackbar(message);
     } catch (e: any) {
       showSnackbar(getFriendlyErrorMessage(e, 'Import failed'));
     } finally {

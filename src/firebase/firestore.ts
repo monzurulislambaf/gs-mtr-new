@@ -200,26 +200,110 @@ export async function checkDuplicateBDNO(bdNo: string, excludeId?: string): Prom
   return snapshot.docs.some((d) => d.id !== excludeId);
 }
 
-export async function bulkImportContacts(contacts: ContactInput[]): Promise<number> {
-  let imported = 0;
-  const batch = writeBatch(db());
+const PHONE_FIELDS = [
+  'SERVICE MOBILE',
+  'PERSONAL MOBILE',
+  'OFFICE TELEPHONE',
+  'PERSONAL TELEPHONE',
+] as const;
 
-  for (const contact of contacts) {
-    const ref = doc(collection(db(), COLLECTIONS.CONTACTS));
-    batch.set(ref, {
-      ...contact,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      deleted: false,
-      version: 1,
-    });
-    imported++;
-    if (imported % 500 === 0) {
-      await batch.commit();
+function normalizeMergeKey(value: string): string {
+  return value.trim().toLowerCase().replace(/\s+/g, '');
+}
+
+function normalizeMergePhone(value: string): string {
+  return value.replace(/\D/g, '');
+}
+
+export async function bulkImportContacts(contacts: ContactInput[]): Promise<number> {
+  const BATCH_SIZE = 500;
+  const existing = await fetchAllContacts();
+
+  // Identity index for merging so re-imports update existing contacts instead
+  // of duplicating them. Precedence: BD NO, then any phone number, then NAME.
+  // Phone/BD NO keys are normalized (e.g. "01769-405000" == "01769405000").
+  const byBdNo = new Map<string, string>();
+  const byPhone = new Map<string, string>();
+  const byName = new Map<string, string>();
+  for (const c of existing) {
+    const bd = normalizeMergeKey(c['BD NO']);
+    const name = normalizeMergeKey(c.NAME);
+    if (bd) byBdNo.set(bd, c.id);
+    if (name) byName.set(name, c.id);
+    for (const field of PHONE_FIELDS) {
+      const phone = normalizeMergePhone(c[field] ?? '');
+      if (phone) byPhone.set(phone, c.id);
     }
   }
-  if (imported % 500 !== 0) {
+
+  const phoneKeysOf = (contact: ContactInput): string[] =>
+    PHONE_FIELDS.map((field) => normalizeMergePhone(contact[field] ?? '')).filter(Boolean);
+
+  let imported = 0;
+  let batch = writeBatch(db());
+  const commitBatch = async () => {
     await batch.commit();
+    batch = writeBatch(db());
+  };
+
+  for (const contact of contacts) {
+    const bdKey = normalizeMergeKey(contact['BD NO'] ?? '');
+    const nameKey = normalizeMergeKey(contact.NAME ?? '');
+    const phoneKeys = phoneKeysOf(contact);
+    let existingId: string | undefined;
+    if (bdKey && byBdNo.has(bdKey)) {
+      existingId = byBdNo.get(bdKey);
+    } else {
+      existingId = phoneKeys.map((k) => byPhone.get(k)).find((id) => !!id);
+    }
+    if (!existingId && nameKey && byName.has(nameKey)) {
+      existingId = byName.get(nameKey);
+    }
+
+    // Only store values that are actually present so an update never wipes
+    // fields the CSV doesn't include (or clears them with empty cells).
+    const fields: Record<string, string> = {};
+    for (const [key, value] of Object.entries(contact)) {
+      const trimmed = typeof value === 'string' ? value.trim() : '';
+      if (trimmed !== '') fields[key] = trimmed;
+    }
+
+    let ref;
+    if (existingId) {
+      ref = doc(db(), COLLECTIONS.CONTACTS, existingId);
+      batch.set(
+        ref,
+        {
+          ...fields,
+          updatedAt: serverTimestamp(),
+          deleted: false,
+          version: Timestamp.now().toMillis(),
+        },
+        { merge: true }
+      );
+    } else {
+      ref = doc(collection(db(), COLLECTIONS.CONTACTS));
+      batch.set(ref, {
+        ...fields,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        deleted: false,
+        version: 1,
+      });
+    }
+
+    // Register this row's keys so duplicates within the same file collapse too.
+    if (bdKey) byBdNo.set(bdKey, ref.id);
+    if (nameKey) byName.set(nameKey, ref.id);
+    for (const phone of phoneKeys) byPhone.set(phone, ref.id);
+
+    imported++;
+    if (imported % BATCH_SIZE === 0) {
+      await commitBatch();
+    }
+  }
+  if (imported % BATCH_SIZE !== 0) {
+    await commitBatch();
   }
   return imported;
 }

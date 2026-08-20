@@ -1,0 +1,648 @@
+NAME,OFFICE TELEPHONE,RESIDENCE TELEPHONE,SERVICE MOBILE
+AOC,5000,6000,01769-405000
+PA to AOC,5001,6001,01678-061383
+Aoc Conf Room,5002,,
+AOC Staff Offr -01,5003,,
+AOC Staff Offr -02,5004,6004,
+Base Adjt,5005,6005,01769-405005
+BLO,5006,6006,01769-405006
+BLO Staff/P-1,5007,,
+Base Hq Ord Room,5008,,
+Bro Clk,5009,,
+Orderly  Offr,5522,,01769-405522
+AOC Banglo Gate(MODC),6009,,
+OC Ops Wing,5010,6010,01769-405010
+PA To OC Ops,5011,,
+Adjt OC Ops,5012,,01769-405012
+Flt Safety Offr (FSO) ,5013,6013,01769-405013
+Flt Safety Staff,5016,,
+Grd Safety Offr (GSO),5014,,01769-405014
+Ops Wing Orderly Room ,5015,,
+OIC Air Mov Flt,5019,6017,01769-405014
+Air Mov Flt Staff,5017,,
+VIP Lounge -01,5018,,
+Base Ops Room,5652,,01769-405060
+OC ATS Radar,5660,6660,01769-405660
+PA To OC OC ATS Radar,5661,,
+Adjt OC  ATS Radar,5662,,01769-405662
+Flt Cdr Ops ATS Radar,5663,6663,01769-405663
+Flt Cdr Trg ATS Radar,5664,6665,
+JCOIC Tech ATS Radar,5665,,01769-405665
+ATS Radar Controller,5667,,
+ATS Radar Ops Room,5668,,01769-405664
+Ord Room ATS Radar,5669,,
+JCOIC ATS Radar Sqn,5666,,
+Flt Cdr Tech ATS Radar,5493,6664,
+Flt Cdr AD ATS Radar,5494,,
+Offr Lounge ATS Radar,5498,,
+UWO ATS Radar,5499,,
+SATCO,5020,6020,01769-405020
+JCOIC/Staff ATC SQN,5021,,01769-405021
+OIC OPS ATC SQN,5022,6022,01769-405022
+OIC TRG ATC SQN,5024,6023,
+ATC TOWER JSR,5023,,01769-405023
+ATC OPS ROOM ATC SQN,5025,6025,
+ATC OFFR LOUNGE ATC SQN,5028,,
+CIV AVN  FIRE ATC SQN,23/65114,,
+Mobile -16/VAN ,26,,
+Mobile-34/HUT,27,,01769-405027
+Civil Tower ,,,02-477765348
+Shift Controller,5024,,
+Ord Room ATC SQN,5029,,
+OIC MET SQN,5030,6030,01769-405030
+STAFF OPS ROOM MET SQN,5031/5035,,01769-405031
+ORD ROOM MET SQN,5033,,
+MET Radar Server Room,5036,,
+Weather Radar ATC SQN,5037,,
+MET Radar |Shelter,5038,,
+DFO MET SQN,5032/5034,,01769-405032
+OC Maint Wg,5200,6200,01769-405200
+PA to OC Maint Wg,5201,,01915-013132
+Adjt Maint Wg,5202,6202,01769-405202
+Ord Room/Staff Maint Wg,5203,,
+Manning Cont Maint Wg,5204,,
+UWO Maint Wg,5205,,
+Conf Room Maint Wg,5206,,
+JCOIC Maint Wg,5208,6208,
+Canteen Tech Bite Maint Wg,5609,,
+OIC AES Sqn,5210,6210,01769-405210
+Staff AES Sqn,5211,,
+L-39 Hanger/K-8 Hanger AES,5212,,
+B&T Flt / B and T Flt AES,5216,,
+OIC PT-6 R&I AES,5214,6214,01769-405214
+JCOIC/Staff PT-6 R&I AES,5215,,01769-405215
+Detail PT-6 R&I AES,5219,,
+OIC Grob R&I,5222,,01769-405735
+115 BD R&I,5213/5135,,
+Grob R&I Staff,5738,,
+New PT-6 Hanger,5738,,
+LAN AES,5218,,
+Ord Room  AES,5227,,
+OIC Cont Sqn,5230,6230,01769-405230
+OIC RR&A Sec,5230,,
+Staff Cont Sqn,5231,,
+RR&A Sec,5232,,
+Quality Cont Sec/ QC,5233,,
+Maint Cont,5234/5229,,01769-405234
+Material Cont ,5235,,
+OJT & Trg Cont Sec,5236,,
+JCOIC OJT SEc ,5207,,
+PDO,5237,,
+Spl Vehicle Cont Sqn,5276,,
+OIC FM Sqn,5240,6240,01769-405240
+Staff FM Sqn,5241,,
+GE Workshop,5242,,
+AGE Flt FM Sqn,5243,,
+Air Cond Shop/ AC shop,5244,,
+LSEW Sec FM sqn,5245,,
+Battery charging,5246,,
+Staff Engg Shop FM Sqn,5247,,
+CRS FM Sqn,5248,,
+IRS FM Sqn,5249,,
+ERS FM sqn,5238,,
+Corrosion cont,5239,,
+Barrier -16,20,,
+Barrier -34,21,,
+Arresting Barrier FM Sqn,5616,,
+JCOIC FM Sqn,5615,,
+OIC C&E Sqn,5250,6250,01769-405240
+OIC Comm Flt C&E Sqn,5251,6251,01769-405251
+OIC GE Flt C&E Sqn,5253,6251,01769-405251
+OIC ICT Flt C&E Sqn,5252,,01769-405252
+OIC AE Flt C&E Sqn,5252,,01769-405252
+OIC Workshop Flt C&E Sqn,5253,6251,01769-405252
+JCOIC/Ord Room C&E Sqn,5254,,
+JCOIC Comm Flt C&E Sqn,5255,6255,
+JCOIC Bills & Record C&E Sqn,5256,,
+Stafff Comm Flt,5257,,
+Switch Room,19,6257,
+Server Room C&E Sqn,29,,
+Tel/Telephone Complain,18,,
+WOIC Fault Cont,14,6256,
+JCOIC AE Flt C&E Sqn,5259,,
+Staff AE Flt PT-6,5657,,
+Staff AE Flt Grob,5659,,
+K-8 Workshop Radio,5653,6653,
+Workshop/Computer/Printer Repair C&E Sqn,5262,,
+Staff Radio Workshop,5658,,
+JCOIC GE Flt C&E Sqn,5260,6263,
+Staff GE Flt/PA Sys/RT C&E Sqn,5263,,
+ECR C&E Sqn,5261,,
+Signal/FAX Center,5264,,
+Cypher/Crypto Center,5265,,
+LAN/Internet office/ICT/VTC section C&E,5266,,
+Inventory Comm Flt,5267,,
+Staff C&E Sqn,5268,,
+C&E Gate,5361,,
+Pantry Room C&E Sqn,5654,,
+V-Set C&E Sqn,5655,,
+Fire PABX Sup C&E Sqn,5055,,
+NDB Shop C&E Sqn,5269,,
+OIC MT Sqn,5270,6270,01769-405270
+Ord/Ops Room MT Sqn,5271,,
+JCOIC MT R&I,5272,,
+MT Store,5273,,
+MT Detail,5274/5544,,01769-405544
+JCOIC MT Ops ,5675,,
+SPL Vehicle OPT MT Sqn,5676,,
+MT R&I Office,5677,,
+MT Ops Record,5678,,
+MT Ops Store,5679,,
+OIC Armt Sqn,5275,6275,01769-405275
+Duty Armourer,5280,,
+OIC Photo & AB Armt,5276,6276,01769-405276
+OIC Grd Armt Flt,5282,,01769-405276
+JCOIC Armt Sqn,5283,6283,
+Staff Armt,5284,,
+Photo Flt,5285,,
+Sub Armory(ATW),5286,,
+Staff AB Armt K-8W,5287,,
+CCTV Armt Sqn,5289,,
+OIC Suply Sqn,5290,6290,01769-405290
+PA To Suply Sqn,5690,,
+OIC Jet Store,5292,6292,
+OIC LP,5291,6291,01769-405291
+OIC Main Store Suply Sqn,5291,,
+OIC POL ,5292,6561,01769-405294
+Cloting Store Suply Sqn,5293,,
+LMS Gate,5294,,
+JCOIC/Admin office Suply Sqn,5295,6295,01769-405294
+TPT/DLA/DSA,5296,,01769-405296
+Fuel Dump Gate,5297,,
+LP Suply Sqn,5298,,
+Tech Store Suply Sqn,5299,,
+Conf Room Suply Sqn,5691,,
+POL NON Avn,5692,,
+V&A Store Suply Sqn,5693,,
+Computer Sec Suply Sqn,5694,,
+Barak Store Suply Sqn,5695,,
+Editing/Jet Store Suply Sqn,5695,,
+POL Avn Suply Sqn,5697,,
+MTG Suply Sqn,5698,,
+OC Admin,5300,6300,01769-405300
+PA To OC Admin,5301,,
+Adjt Admin Wg,5302,,
+BWO Staff,5303,,
+BWO ,5304,,
+Civil Admin Offr(CGO),5305,,
+OIC Edn Flt/Base Welfare Offr,5306,6306,01769-405306
+OIC GST Flt,5808,,
+JCOIC GST Flt,5818,6308,
+GST Flt Staff,5308,,
+OIC Works Flt,5329,6329,
+Works Flt,5307,,
+Accommodation Flt,5309,,
+Accommodation Flt(Offr),5388,,
+OIC P Sqn,5310,6310,01769-405310
+PA To P Sqn,5828,,
+OIC P Flt,5311,6311,01769-405311
+OIC Cat Flt,5312,,
+CAT Flt,5313,,
+Central Registry,5314,,
+JCOIC P Flt,5315,,
+Documents Sec,5316,,
+Base Library/Edn Flt,5317,,
+P-2 P Flt,5318,,
+Staff P Flt/p-3,5328,,
+CAT Flt Computer Room,5523,,
+Cat Flt Pay Sec,5524,,
+AC Bus Booking,5817,,
+Microbus Booking,5317,,
+OIC Accts Sqn,5320,6320,01769-405320
+OIC PAY (Offr & Men) 2IC Accts Sqn,5321,6321,01769-405321
+OIC Equipment,5322,,01769-405322
+JCOIC Accts,5323,,
+Staff Accts Sqn,5324/5839,,
+Offrs Pay Sec & TA/DA,5325,,
+Airman Pay Sec,5326,,
+Cash Accs Sqn,5327,,
+PSI,5319,,
+Accts V&A Store/ Inventory,5837,,
+Local Audit Accs Sqn,5836,,
+Civil Pay Sec Accs Sqn,5838,,
+SMO,5330 62218,6330 62219,01769-405330
+PA To SMO,5331,,
+Dental Surgeon,5332,6332,01769-405332
+Dental Staff,5349,,
+Flt Surgeon 1,5333,6333,01769-4053233
+Civ Doctor 1,5533,,
+Civ Doctor 2,5533,,
+JCOIC Med Sqn,5335,,
+Lady Doctor 1,5336,,01769-405336
+Lady Doctor 2,5337,,
+Family Recep Med Sqn,5338,,01769-405342
+Med Store/LP,5339,,
+Male Ward Med Sqn,5340,,01769-405340
+Female Ward Med Sqn,5341,,
+X-Ray Med Sqn,5341,,
+Ent Splt/MO Med Sqn,5342,,
+Ord Room Med Sqn,5343,,
+DMO Med Sqn,5344,,
+Seba  Med Sqn,5345,,
+Document Sec Med Sqn,5346,,
+Med Offr(BAFA) Med Sqn,5347,,
+LAB/Pathology Med Sqn,5348,,
+Reception Med Sqn,24,,
+PTA Med Sqn,34,,
+MI Room BAFA,5706,6706,01769-405155
+Flt Surgeon 2 Med Sqn,5533,6533,01769-405333
+Seba Ward Med Sqn,5535,,
+OIC Sy Sqn,5350,6350,01769-405350
+JCOIC Sy Sqn,5351,,01769-405350
+Main Grd Room,5352,,01769-405352
+Ord Room Sy Sqn,5354,,
+Pass Sec Sy Sqn,5366,,
+MODC Ord Room Sy Sqn,5368,6368,
+Staff Fire Flt,5367,,
+Fire Flt/Emergency Fire,22,,01769-405922
+Crush Bay Sy Sqn,5555,,
+Armt Sqn Gate,5359,,
+BAFA Gate,5369,,
+Bashbaria Gate,5355,,
+Cadets Female Billet,5376,,
+Cadets Grd Room,5358,,
+Cadets Grd Room,5197,,
+Comdt Banglo Gate,6104,,
+Faridpur Ck Post,5356,,
+Fuel Dump Ck Post,5374,,
+Khitibdia Ck Post,5363,,
+Loop Road,5365,,
+Mollika Ck Post,5387,,
+Museum Sub Gate,5221,,
+OTS MODC Gate,5408,,01769-405408
+Bell Flt MODC gate,5364,,
+Pantho Para Ck Post,5363,,
+Photo Gate,5373,,
+Pranto Chaya Ck Post,5362,,
+Sahid Minar Gate,5357,,
+B-type Offr Reception,5504,,
+3 Fu Gate,5459,,
+Principle S/C Shaheen College Jsr,5570,6570,01769-405570
+Adjt S/C Shaheen College Jsr,5572,,01769-405572
+PA To S/C Principle Shaheen College Jsr,5571,,
+Vice Principle Shaheen College Jsr,5543,6571,01769-405571
+Ord Room/Office Shaheen College Jsr,5577,,
+Golden Eagle Principle Jsr,5579,6579,01769-405579
+Golden Eagle,5573,,01769-406573
+English Version ,5574,,01769-405575
+Principle S/C Shaheen College Bogura,999-5383,999-6385,01769-405590
+PA To S/C Principle Shaheen College Bogura,999-5385,,
+Adjt S/C Shaheen College Bogura,999-5387,,01769-405592
+OC FIS MTR,5460,6460,01769-404930
+PA/Ord Room FIS MTR,5461,,
+Adj FIS MTR,5461,,
+Flt Cdr Trg FIS MTR,5463,6623,
+Staff Inst FIS MTR,5463,6735,01769-404933
+Staff Inst FIS MTR 2,5462,6623,
+CI FIS SIM MTR,5465,6465,01769-404950
+Ops Room Sim FIS MTR,5466,6738/6467,01769-404954
+Inst Pilot- 2 SIM FIS MTR,5467,,
+Student Crew/Conf Room FIS MTR,5468,6468,
+CI FIS MTR,5622,6622,
+FIS I/C Of Parade Fis MTR,5625,,
+Staff Inst FIS MTR 3,5464,6464,
+Canteen Fis MTR,5469,,
+OC OTS,5400-62210,6400-62211,01769-405400
+PA to OC OTS,5401,,
+Adjt OTS,5402,6402,01769-405402
+Prog & Trg Cont OTS,5404,6404,01769-405404
+OIC & INST Tech Trg Sqn OTS,5403,6403,01769-405403
+OIC & INST Aero Engg OTS,5405,,01769-405405
+OIC & INST C&E Trg Flt OTS,5406,,
+OIC & INST Armt Trg Flt OTS,5407,,
+OIC & INST ATS OTS,5409,,01769-405409
+OTS LAB/Prog OTS,5410,,
+JCOIC Prog Sec OTS,5411,,
+Class Coord/BAR OTS,5412,,
+OIC & INST ACAD Trg Prog OTS,5413,6413,01769-405413
+Staff/OrdRoom/DSO OTS,5415,,
+UWO OTS,5416,,
+OTS Mess,5419,,
+OTS BAR,5418,,
+Computar Lab OTS,5414,,
+OC P&S (U),5420/62214,6420/62215,01769-405420
+Adjt P&S (U),5421,5421,01769-405421
+Ord Room P&S (U),5423,,
+Desk P&S (U),5422,,01769-405422
+Investigation P&S (U),5424,6424,01769-405424
+Guard Room Sec P&S (U),5425,,
+MT Sec P&S (U),5426,,
+Sup sec P&S (U),5427,,
+OC P&S(U) Sub FIS,,,01769-405425
+Desk P&S (U)  Sub FIS,,,01769-405426
+OC 210 MU,5430/62238,6430,01769-405430
+PA/Ord Room 210 MU,5431,,
+Adjt 210 MU ,5432,,
+Radio Shop 210 MU ,5433,6432,
+OIC Engg Insp/Rep Flt 210 MU ,5434,6433,
+OIC Maint Supt Sqn 210 MU ,5435,6434,
+OIC NDT Shop 210 MU ,5436,6435,
+Prod Con/Cent R&D Proj 210 MU ,5437,6436,
+Staff 210 MU,5438,6437,
+LAN 210 MU ,5439,6438,
+OC 75 Sqn,5440,6440,01769-405440
+PA 75 Sqn,5441,,
+Adjt 75 Sqn,5442,,01769-405442
+OIC Ops 75 Sqn,5443,6443,01769-405443
+Ord Room P&S (U),5444,6444,
+OIC Tech Flt 75 Sqn,5445,6445,01769-405445
+Duty Controller 75 Sqn,5446,6446,01769-405446
+Ops Room 75 Sqn,5447,,
+JCOIC Tech Flt 75 Sqn,5448,,
+Offr Crew Room 75 Sqn,5449,6802,
+UWO 75 Sqn,5473,,
+JCOIC Ops Flt 75 Sqn,5472,,
+Radar 75 Sqn OTS,5470,,
+Radar OTS (RADAM) MODC 75 Sqn,5471,,
+Crew Room 75 Sqn,5474,,
+OC 3 FU,5450/62212,6450/62213,01769-405450
+Staff/Ord Room  3 FU,5451,,
+Adjt  3 FU,5452,,01769-405452
+Cont Room/Desk  3 FU,5453,,01769-405453
+CI Cell  3 FU,5454,,
+Investigation  3 FU,5455,,
+Tech Flt  3 FU,5457,,
+Monitoring Cell  3 FU,5456,,
+JCIOC  3 FU,5458,,
+LMH FS  3 FU,,,01769-405451
+BSRU FS  3 FU,,,01769-405456
+FIS FS  3 FU,,,01769-405457
+BRU FS  3 FU,,,01769-405458
+Comdt BAFA,5100,6100,01769-405100
+PA To Comdt BAFA,5101,,
+Adjt Comdt BAFA,5102,6102,01769-405102
+Staff Offr/Admin Comdt BAFA,5107,6107,01769-405107
+OIC CPTC BAFA,5103,6103,01769-405103
+Ord Room BAFA,5104,,
+CI BAFA,5105,6105,01769-405105
+PA To CI BAFA,5106,,
+ALO BAFA,5108,6108,01769-405108
+CPTC Staff/PTW,5109,,
+Conf Room BAFA,5117,,
+P-1/ALO Staff BAFA,5118,,
+Auditorium BAFA,5752,,
+BAFA Office,5704,,
+OC Sp/Support  Wg,5150,6150,01769-405150
+PA To OC Sp/Support Wg,5151,,
+Adjt OC Sp/Support Wg,5152,6152,01769-405152
+Staff Offr Sp/Support Wg,5153,6153,
+Ord Room Sp/Support Wg,5155,,
+OIC Accts Sp/Support Wg,5156,6156,01769-405156
+Staff Accs Sp/Support Wg,5157,,
+OIC Logistic Sp/Support Wg,5158,,01769-405158
+Log Flt Staff Sp/Support Wg,5159,,
+Log Lp Sp/Support Wg,5751,,
+Civ Admin Sp/Support Wg,5753,,
+TA/DA Sec Sp/Support Wg,5754,,
+UWO Sp/Support Wg,5759,,
+P-1 Sp/Support Wg,5118,,
+P-2 Sp/Support Wg,5154,,
+P-3 Sp/Support Wg,5758,,
+Bills Sec Sp/Support Wg,5755,,
+Airmen Pay Sp/Support Wg,5756,,
+Cash Sec Sp/Support Wg,5757,,
+OIC Admin Building Sp/Support Wg,5750,6750,01769-40 5153
+OC 11 Sqn,5120,6120,01769-405120
+PA To OC 11 Sqn,5121,,
+Adjt 11 Sqn,5122,6122,01769-405134
+Flt Cdr-1 11 Sqn,5123,,01769-405123
+Flt Cdr-2 11 Sqn,5124,6124,01769-405124
+Crew Room 11 Sqn,5128/5174/5131,,
+Ord Room 11 Sqn,5129,,01769-405137
+Inst Pilot 11 Sqn,5125/5130/5132/5133/5138,,
+OIC PT-6 Flt Line,5126,,01769-405126
+PT-6 Simulator 11 Sqn,5398,,
+PT-6 Detail Room 11 Sqn,5218,,01769-405218
+PT-6 Flt Line 11 Sqn,5127,,01769-40 5139
+Staff/JCOIC PT-6 R&I 11 Sqn,5215,,01769-405215
+Staff AE Flt PT-6 11 Sqn,5657,,
+Ops Room 11 Sqn,5113,,01769-405113
+Draft Man 11 Sqn,5137,,
+Grd/Ground Supervisor 11 Sqn,,,01769-405127
+OC 12 Sqn,5730,6730,01769-405730
+PA To OC 12 Sqn,5731,,
+Adjt 12 Sqn,5732,6732,01769-405732
+Flt Cdr & Trg -1  12 Sqn,5733,6733,01769-405733
+Flt Cdr & Trg -2 12 Sqn,5734,,01769-405734
+Ord Room 12 Sqn,5739,,01769-405731
+AE Flt/Radio Workshop 12 Sqn,5659,,
+OIC Grob Simulator 12 Sqn,5390,,01769-405748
+OIC Grob R&I ,5222,,01769-405735
+OIC Grob Flt Line,5736,,01769-405736
+Grob Simulator,5396,,
+Grob Detail Room 12 Sqn,5228,,
+Grob Flt Line 12 Sqn,5737,,01769-405739
+Grob R&I 12 Sqn,5738,,01769-405738
+Ops Room 12 Sqn,5113,,01769-405113
+Grd/Ground Supervisor 12 Sqn,,,01769-405737
+Inst Pilot 12 Sqn,5725/5743/5745/5746/5736/5741,,
+Crew Room 12 Sqn,5747,,
+Flt Cdr Trg -2  12 Sqn,5745,,
+OC 18 Sqn,5160,6160,01769-405160
+PA To OC 18 Sqn,5161,,
+Adjt/Crew Room 18 Sqn,5162,6162,01769-405162
+Flt Cdr Ops 18 Sqn,5163,6173,01769-405163
+Flt Cdr Trg 18 Sqn,5164,,01769-405164
+Staff Inst 12 Sqn,5166,,
+Ord Room/UWO 18 Sqn,5167,,
+Inst Crew Room 18 Sqn,5168,6168,01769-405168
+OIC Bel -206 Flt 18 Sqn,5169,6169,01769-405169
+Bel-206 Flt Line,5170,,01769-405170
+Staff Bel -206 Flt Line,5762,,
+Bel MODC Ck Post 18 Sqn,5364,,
+OIC Augasta 18 Sqn,5760,6760,01769-405169
+Augasta Detail Room 18 Sqn,5761,,
+Staff Augasta 18 Sqn,5764,,
+Duty Ops Offr 18 Sqn,5763,,
+Inst Pilot 18 Sqn,5172/5176,,
+Canteen 18 Sqn,5173,,
+OC FTW,5110,6110,01769-405110
+PA/PTS FTW,5111,,
+Adjt/Flt Surg FTW,5112,,01769-405112
+Ops Room FTW,5113,,01769-405113
+Crew Room/Canteen FTW/12 Sqn,5114,,
+CI Analyst FTW,5115,6115,
+Ord Room FTW,5116,,
+Intercom Exch FTW,5171-72,,
+Flt Surgeon FTW,5119,,
+OC ATW,5180/62231,6180/62232,01769-405180
+PA to OC ATW,5181,,
+Adjt ATW,5182,6182,01769-405182
+OIC Prog ATW,5183,6183,01769-405183
+OIC Humanity ATW,5184,6785,01769-405184
+OIC Aero Sci Sec ATW,5185,,01769-405185
+OIC Trg SP ATW,5186,,01769-405186
+OIC Eng Studied Sqn ATW,5187,6187,01769-405187
+Staff Trg Support ATW,5188,,
+Mini Armory ATW,5286,,
+Library ATW,5784,,
+Ord Room ATW,5782,,
+Prog Staff ATW,5788,,
+OIC Library ATW,5785,6785,
+ATW Canteen,5780,,
+ATW Conf Room,5804,,
+Inst - ATW,5783,6783,
+Inst - ATW,5564,6564,01769-405259
+Inst - ATW,5781,6781,
+Inst - ATW,5564,6787,
+Inst - ATW,5786,,
+Inst - ATW,5787,,
+OC CTW,5190,6190,01769-405190
+PA To OC CTW,5191,,
+Adjt CTW,5192,6192,01769-405192
+OIC GST CTW,5193,6193,01769-405193
+OIC & Inst No-1 CTW,5194,,01769-405194
+Inst CTW,5195,6195,01769-405195
+Bir Uttom Badrul Alom Sqn 3,5790,6790,
+Bir Uttom Badrul Alom Sqn 3,,,
+OIC & Inst CTW,5494,,
+Band/music Flt CTW,5198,,
+GST Flt CTW,5199,6199,
+Ord Room CTW,5791,,
+Inst No-1 Sqn CTW,5792,,
+Inst No-2 Sqn CTW,5793,6793,
+Inst CW No-2 Sqn CTW,5794,6794,
+Inst Cdts Wg CTW,5795,,
+PPC & Computer Room,5796,,
+Female Cdts Billet-2,5797,,
+Inst CTW,5798,6798,
+GST DNCO CTW,5799,,
+Course Inst CTW,5541/5542/5545,,
+Offr Mess Office/Bill Sec,5503,,
+Offr Mess BAR,5502,,
+Cdts Mess,5505,,
+Cdts Mess BAR,5506,,
+OIC Cdts Mess,5196,6196,01769-405196
+Sgts Mess,5507,,
+Airmens Mess,5509,,01769-405509
+MODC Mess,5511,,
+President Reg Br BAFWWA,5560,,01769-406000
+Ladis/Children Club,5561,,01769-405561
+Urboshi(Boutiques),5562,,
+BAFWWA Office,5563,,01769-405563
+LIASON offr BAFWWA,5563,,
+Urboshi-2,5569,,
+OC 15 Sqn,5140,6140,01769-405140
+PA To OC 15 Sqn,5141,,
+Adjt 15 Sqn,5142,6142,01769-405142
+Flt Cdr Ops 15 Sqn,5143,6143,01769-405143
+Flt Cdr Trg 15 Sqn,5144,6144,01769-405144
+Ops Room 15 Sqn,5145,6145,01769-405145
+Staff Inst 15 Sqn,5146,,01769-405146
+OIC R&I 15 Sqn,5147,,01769-405148
+OIC Flt Line 15 Sqn,5148,,01769-405147
+Inst Room 15 Sqn,5771,,
+Ord Room 15 Sqn,5149,,
+JCOIC K-8w Flt Line 15 Sqn,5223,,
+K-8W Flt Line 15 Sqn,5225,,
+K-8W R&I 15 Sqn,5226,,
+JCOIC K-8w R&I 15 Sqn,5229,,
+K-8W Radio Workshop 15 Sqn,5653,,
+Staff Inst K-8W,5772,,
+K-8W Canteen 15 Sqn,5779,,
+GE Air,5580,6580,01769-405580
+PA To GE Air,5581,,
+AGE MES Air,5582,,01769-405582
+AGE (E&M) MES Air,5583,6583,01769-405583
+Sub STN,5584,,
+MES Complain,28,,01748-388287
+36 AD Canteen army Jsr,,,01769-556718
+Ananna Offr Mess,6521,,
+Barbar Shop Offr Mess,6529,,
+Base Tailor,,,01717-726332
+Beauty Parlor/Belleza,5525,,01769-405525
+Binodia Park,,,01769-556904
+Blizz Chinese Restu,955-3638,,01790-541752
+Boat Club,955-3730,,01769-552109
+Bihongo,5515,,01788-396822
+Chili Spice,,,01727-795700
+CSD,955-3149,,01769-553149
+Cyber Café,5512,,
+OIC Dairy Farm,5566,6566,
+Dairy Farm,5565,,01769-405565
+Dhupi Shop,,,01715-182197
+Dish Complain,6770,,01956-437172
+Falcon Bakery,5514,,01769-405514
+Falcon Bakery Outlet,5515,,
+BAF Museum,5220,,
+BAF Museum Sub Gate,5221,,
+ Internet Residence/Home,6888,,01910-414455
+Post Office(Jsr Airbase-7404),,,01930-579168
+Swimming Poll/GYM,6513,,
+Tech Bite Canteen Main Wg,5609,,
+Take Off Canteen,,,01886-367795
+Tennis Court,5513,,
+Water Plant,5829,,
+GSO-2(Air) DGFI Jsr,,6847,01730-555912
+OC 58 BNCC,5568,6568,01709-993170
+Teacher 58 BNCC,,,01712-950440
+OC FIS Bogura,999- 4930,4930,01769-404930
+Adjt OC FIS Bogura,999-4932,,01769-404932
+Flt Cdr(Flg Trg) FIS Bogura,999-4933,,01769-404933
+Flt Cdr(Grd Trg) FIS Bogura,999-4934,,01769-404934
+Staff Inst -1,,,01769-404935
+Ops Room FIS Bogura,999-4936,,01769-404936
+OIC Tech Flt FIS Bogura,,,01769-404937
+Flt Surgeon FIS Bogura,,,01769-404938
+Ord Room FIS Bogura,999-4939,,
+Guard Room FIS Bogura,,,01769-404939
+ATC Tower FIS Bogura,999-4941,,01769-404940
+DATCO FIS Bogura,,,01769-404942
+DFO FIS Bogura,,,01769-404943
+JCOIC PT-6 Flt Line FIS Bogura,,,01769-404944
+FIS Exch FIS Bogura,"999-4948,4949",,
+FIS Fax FIS Bogura,4959,,
+Simulator Ord room,5396,,
+Simulator Reception,5399,,
+PMC Offr Mess,5500,,01769-405500
+Mess Secy Offr Mess,5501,,01769-405502
+Cook House/Store Man Offr Mess,6504,,01769-405535
+BOQ No-1 Offr Mess,,,01769-405505
+Barber Shop ,6529,,
+Ananna,6521,,
+VIP Room(Shapla),6505,,
+Belly,6508,,
+Palash,6507,,
+Shimul,6506,,
+Shiuly,6509,,
+BOQ-1 Grd Floor,6510,,
+BOQ-1  First  Floor,6526,,
+BOQ-1  Second Floor,6512,,
+BOQ-1 Third Floor,6527,,
+BOQ-2 Grd  Floor,6524,,
+BOQ-2 First Floor,6516,,
+BOQ-2 Second Floor,6525,,
+BOQ-2 Third Floor,6523,,
+BOQ-3 Grd Floor,6519,,
+BOQ-3 First Floor,6522,,
+BOQ-3 Second Floor,6520,,
+BOQ-3/101(Albatross),6801,,
+BOQ-3/102(Condor),6802,,
+BOQ-3/104,6804,,
+VOQ 7th Floor,6847,,
+VOQ 8th Floor,6848,,
+VOQ 9th Floor,6849,,
+Comm  Unit/BSR/HQ Exch,"999-11,12,17",,01769-996090-9
+ZHR Exch,"950-11,12,17",,01769-506090-7
+AKR Exch,"990-11,12,17",,01769-906090-1
+MTR Exch,"11,12,17",,01769-406090-7
+CXB Exch,"995-11,12,17",,01769-956093-3
+MRU Exch(77 Sqn),"990-4926,4927",,
+BRU Exch,"999-4976,4977",,
+CRU Exch,"995-5447,999-5998",,
+FIS Bogura Exch,"999-4948,4949",,
+S Nagar Exch,"990-4752,4756-7",,
+BSRU Exch,"999-5832-4,5826",,
+71 Sqn Exch,"990-5449,5452",,
+203 MU Rjp,999-5977,,
+LMH Exch,"999-5966,3931",,
+LMH Ord Room,999-5967,,
+OC LMH,,,01769-491344
+Adjt LMH,,,01769-495005
+OC BRU,999-4960,,01769-404960
+Store Man BRU,,,01769-405524
+CMH Jsr DMO,955-3311,,01769-553311
+CMH Jsr Reception,955-3322,,01769-553322
+CMH Dhaka,901-4999,,01769-019650
+Jsr Army,955-11,,
+Agrani Bank Jsr airport,5575,,
